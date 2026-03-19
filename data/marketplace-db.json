@@ -1,0 +1,145 @@
+[
+  {
+    "id": "m001",
+    "slug": "used-innova-crysta-2019",
+    "make": "Toyota",
+    "model": "Innova Crysta 2.4 GX",
+    "year": 2019,
+    "kmDriven": 145000,
+    "registrationType": "Commercial / Taxi Plate",
+    "insuranceValidity": "December 2025",
+    "engineCC": 2393,
+    "seatingCapacity": 7,
+    "condition": "Good",
+    "price": 1350000,
+    "callForPrice": false,
+    "taxiPlated": true,
+    "description": "Well-maintained Innova Crysta from our own fleet. Service records available. All documents clean.",
+    "features": [
+      "Dual Zone AC",
+      "GPS Tracker",
+      "First Aid Kit",
+      "Fire Extinguisher"
+    ],
+    "images": [
+      "https://imgd.aeplcdn.com/664x374/n/cw/ec/51435/innova-crysta-exterior-right-front-three-quarter-2.jpeg"
+    ],
+    "specifications": {
+      "Make": "Toyota",
+      "Model": "Innova Crysta 2.4 GX",
+      "Year": "2019",
+      "KMs Driven": "1,45,000 km",
+      "Registration": "Commercial/Taxi Plate",
+      "Insurance": "Valid till Dec 2025",
+      "Engine": "2393cc Diesel",
+      "Seating": "7 Passengers",
+      "Condition": "Good",
+      "Service History": "Available"
+    }
+  },
+  {
+    "id": "m002",
+    "slug": "used-fortuner-2020",
+    "make": "Toyota",
+    "model": "Fortuner 4x2 MT",
+    "year": 2020,
+    "kmDriven": 98000,
+    "registrationType": "Commercial / Taxi Plate",
+    "insuranceValidity": "March 2026",
+    "engineCC": 2755,
+    "seatingCapacity": 7,
+    "condition": "Excellent",
+    "price": null,
+    "callForPrice": true,
+    "taxiPlated": true,
+    "description": "Lightly used Fortuner with full service history. Premium condition.",
+    "features": [
+      "Leather Seats",
+      "Sunroof",
+      "JBL Audio",
+      "GPS",
+      "Reverse Camera"
+    ],
+    "images": [
+      "https://imgd.aeplcdn.com/664x374/n/cw/ec/44709/fortuner-exterior-right-front-three-quarter-2.jpeg"
+    ],
+    "specifications": {
+      "Make": "Toyota",
+      "Model": "Fortuner 4x2 MT",
+      "Year": "2020",
+      "KMs Driven": "98,000 km",
+      "Registration": "Commercial/Taxi Plate",
+      "Insurance": "Valid till Mar 2026",
+      "Engine": "2755cc Diesel",
+      "Seating": "7 Passengers",
+      "Condition": "Excellent"
+    }
+  },
+  {
+    "id": "m003",
+    "slug": "used-tempo-traveller-2020",
+    "make": "Force",
+    "model": "Traveller 12 Seater",
+    "year": 2020,
+    "kmDriven": 210000,
+    "registrationType": "Commercial / Contract Carriage",
+    "insuranceValidity": "August 2025",
+    "engineCC": 2596,
+    "seatingCapacity": 12,
+    "condition": "Good",
+    "price": 850000,
+    "callForPrice": false,
+    "taxiPlated": true,
+    "description": "High roof 12-seater with push-back seats. Suitable for corporate groups.",
+    "features": [
+      "Roof AC",
+      "Push Back Seats",
+      "Music System",
+      "Curtains"
+    ],
+    "images": [
+      "https://imgd.aeplcdn.com/664x374/n/cw/ec/136871/traveller-exterior-right-front-three-quarter-3.jpeg"
+    ],
+    "specifications": {
+      "Make": "Force",
+      "Model": "Traveller 3350",
+      "Year": "2020",
+      "KMs Driven": "2,10,000 km",
+      "Registration": "Commercial/Contract Carriage",
+      "Insurance": "Valid till Aug 2025",
+      "Engine": "2596cc Diesel",
+      "Seating": "12 + Driver",
+      "Condition": "Good"
+    }
+  },
+  {
+    "id": "m1773912901015",
+    "slug": "maruti-innova-2026-1015",
+    "make": "Maruti",
+    "model": "Innova",
+    "year": 2026,
+    "kmDriven": 2000,
+    "registrationType": "Commercial / Taxi Plate",
+    "insuranceValidity": "December ",
+    "engineCC": 2000,
+    "seatingCapacity": 6,
+    "condition": "Good",
+    "price": 625365,
+    "callForPrice": false,
+    "taxiPlated": true,
+    "description": "dhjhshdjsd",
+    "features": [],
+    "images": [],
+    "specifications": {
+      "Make": "Maruti",
+      "Model": "Innova",
+      "Year": "2026",
+      "KMs Driven": "2,000 km",
+      "Registration": "Commercial / Taxi Plate",
+      "Insurance": "December ",
+      "Engine": "2000cc",
+      "Seating": "6 Passengers",
+      "Condition": "Good"
+    }
+  }
+]

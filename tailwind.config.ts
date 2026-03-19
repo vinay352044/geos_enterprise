@@ -1,0 +1,79 @@
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: [
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        navy: {
+          DEFAULT: '#0D2B5E',
+          50: '#E8EDF5',
+          100: '#C5D2E8',
+          500: '#0D2B5E',
+          600: '#0A2250',
+          700: '#081A3E',
+        },
+        slate: {
+          DEFAULT: '#334155',
+        },
+        accent: {
+          DEFAULT: '#1E40AF',
+          light: '#2563EB',
+        },
+        success: '#166534',
+        warning: '#92400E',
+        error: '#991B1B',
+        'bg-light': '#F1F5F9',
+      },
+      fontFamily: {
+        heading: ['Montserrat', 'sans-serif'],
+        body: ['Roboto', 'sans-serif'],
+      },
+      spacing: {
+        '1': '8px',
+        '2': '16px',
+        '3': '24px',
+        '4': '32px',
+        '5': '48px',
+        '6': '64px',
+        '7': '96px',
+        '8': '128px',
+      },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '2rem',
+          lg: '4rem',
+          xl: '5rem',
+          '2xl': '6rem',
+        },
+        screens: {
+          '2xl': '1400px',
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s ease-out forwards',
+        'slide-up': 'slideUp 0.6s ease-out forwards',
+        'count-up': 'countUp 2s ease-out forwards',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(30px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+
+export default config

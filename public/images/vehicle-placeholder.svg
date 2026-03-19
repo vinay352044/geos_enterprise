@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#F1F5F9"/>
+  <rect x="60" y="120" width="280" height="100" rx="12" fill="#CBD5E1"/>
+  <rect x="100" y="90" width="200" height="80" rx="10" fill="#94A3B8"/>
+  <circle cx="120" cy="228" r="24" fill="#64748B"/>
+  <circle cx="120" cy="228" r="12" fill="#94A3B8"/>
+  <circle cx="280" cy="228" r="24" fill="#64748B"/>
+  <circle cx="280" cy="228" r="12" fill="#94A3B8"/>
+  <rect x="140" y="98" width="60" height="50" rx="6" fill="#CBD5E1" opacity="0.6"/>
+  <rect x="210" y="98" width="60" height="50" rx="6" fill="#CBD5E1" opacity="0.6"/>
+  <rect x="60" y="170" width="30" height="20" rx="4" fill="#F1F5F9" opacity="0.8"/>
+  <rect x="310" y="170" width="30" height="20" rx="4" fill="#F1F5F9" opacity="0.8"/>
+  <text x="200" y="278" text-anchor="middle" fill="#94A3B8" font-size="13" font-family="Arial, sans-serif" font-weight="500">No Image Available</text>
+</svg>
