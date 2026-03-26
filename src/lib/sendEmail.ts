@@ -1,16 +1,7 @@
+import { Resend } from 'resend'
 import nodemailer from 'nodemailer'
 
-function getTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  })
-}
+const NOTIFY_EMAILS = ['vinaysharma352044@gmail.com', 'geosenterprises@gmail.com']
 
 export async function sendLeadEmail(lead: {
   leadId: string
@@ -25,12 +16,6 @@ export async function sendLeadEmail(lead: {
   vehicleType: string
   additionalNotes?: string
 }): Promise<{ success: boolean; error?: string }> {
-  if (!process.env.SMTP_USER) {
-    console.log(`[DEV] Lead email would be sent for lead: ${lead.leadId}`)
-    return { success: true }
-  }
-
-  const transporter = getTransporter()
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
   const formattedStartDate = formatDate(lead.tripStartDate)
@@ -68,18 +53,49 @@ export async function sendLeadEmail(lead: {
 </body>
 </html>`
 
-  try {
-    await transporter.sendMail({
-      from: `"GEOS Enterprises Leads" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL || process.env.SMTP_USER,
-      subject: `[NEW LEAD] GEOS Enterprises — Booking Request from ${lead.customerName} | ${formattedStartDate}`,
-      html,
-    })
-    return { success: true }
-  } catch (error) {
-    console.error('[EMAIL ERROR]', error instanceof Error ? error.message : 'Unknown error')
-    return { success: false, error: 'Email delivery failed' }
+  const subject = `[NEW LEAD] GEOS Enterprises — Booking Request from ${lead.customerName} | ${formattedStartDate}`
+
+  // Use Resend if API key is configured (no app passwords needed)
+  if (process.env.RESEND_API_KEY) {
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    try {
+      await resend.emails.send({
+        from: 'GEOS Enterprises <onboarding@resend.dev>',
+        to: NOTIFY_EMAILS,
+        subject,
+        html,
+      })
+      return { success: true }
+    } catch (error) {
+      console.error('[RESEND ERROR]', error instanceof Error ? error.message : 'Unknown error')
+      return { success: false, error: 'Email delivery failed' }
+    }
   }
+
+  // Fallback: SMTP (nodemailer) if configured
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    })
+    try {
+      await transporter.sendMail({
+        from: `"GEOS Enterprises Leads" <${process.env.SMTP_USER}>`,
+        to: [...new Set([...NOTIFY_EMAILS, process.env.ADMIN_EMAIL].filter(Boolean))].join(', '),
+        subject,
+        html,
+      })
+      return { success: true }
+    } catch (error) {
+      console.error('[EMAIL ERROR]', error instanceof Error ? error.message : 'Unknown error')
+      return { success: false, error: 'Email delivery failed' }
+    }
+  }
+
+  console.log(`[DEV] No email provider configured. Lead ${lead.leadId} would be sent to: ${NOTIFY_EMAILS.join(', ')}`)
+  return { success: true }
 }
 
 export async function sendContactEmail(data: {
@@ -89,12 +105,6 @@ export async function sendContactEmail(data: {
   subject: string
   message: string
 }): Promise<{ success: boolean; error?: string }> {
-  if (!process.env.SMTP_USER) {
-    console.log('[DEV] Contact email would be sent')
-    return { success: true }
-  }
-
-  const transporter = getTransporter()
   const html = `<div style="font-family: Arial; max-width: 600px; margin: 0 auto; padding: 20px;">
     <h2 style="color: #0D2B5E;">New Contact Form Submission</h2>
     <p><strong>Name:</strong> ${data.name}</p>
@@ -104,16 +114,43 @@ export async function sendContactEmail(data: {
     <p><strong>Message:</strong><br>${data.message.replace(/\n/g, '<br>')}</p>
   </div>`
 
-  try {
-    await transporter.sendMail({
-      from: `"GEOS Website" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL,
-      replyTo: data.email,
-      subject: `[CONTACT] ${data.subject} — ${data.name}`,
-      html,
-    })
-    return { success: true }
-  } catch {
-    return { success: false, error: 'Email delivery failed' }
+  if (process.env.RESEND_API_KEY) {
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    try {
+      await resend.emails.send({
+        from: 'GEOS Website <onboarding@resend.dev>',
+        to: NOTIFY_EMAILS,
+        replyTo: data.email,
+        subject: `[CONTACT] ${data.subject} — ${data.name}`,
+        html,
+      })
+      return { success: true }
+    } catch {
+      return { success: false, error: 'Email delivery failed' }
+    }
   }
+
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: parseInt(process.env.SMTP_PORT || '587'),
+      secure: false,
+      auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+    })
+    try {
+      await transporter.sendMail({
+        from: `"GEOS Website" <${process.env.SMTP_USER}>`,
+        to: process.env.ADMIN_EMAIL,
+        replyTo: data.email,
+        subject: `[CONTACT] ${data.subject} — ${data.name}`,
+        html,
+      })
+      return { success: true }
+    } catch {
+      return { success: false, error: 'Email delivery failed' }
+    }
+  }
+
+  console.log('[DEV] No email provider configured for contact form.')
+  return { success: true }
 }

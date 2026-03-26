@@ -38,6 +38,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Admin data (live on server, not tracked in git)
+/data/marketplace-db.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -4,13 +4,74 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Plus, Edit, Trash2, LogOut, Home } from 'lucide-react'
+import { Plus, Edit, Trash2, LogOut, Home, AlertTriangle, X } from 'lucide-react'
 import type { MarketplaceListing } from '@/types'
+
+function DeleteConfirmModal({
+  name,
+  onConfirm,
+  onCancel,
+  loading,
+}: {
+  name: string
+  onConfirm: () => void
+  onCancel: () => void
+  loading: boolean
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(4px)' }}>
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative" style={{ border: '1px solid #E8ECF4' }}>
+        <button
+          onClick={onCancel}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X size={18} />
+        </button>
+
+        <div className="flex flex-col items-center text-center">
+          <div className="w-14 h-14 rounded-full flex items-center justify-center mb-5" style={{ backgroundColor: '#FDECEA' }}>
+            <AlertTriangle size={26} style={{ color: '#8E1B2D' }} />
+          </div>
+          <h2 className="font-heading font-bold text-xl mb-2" style={{ color: '#12235A' }}>Delete Listing?</h2>
+          <p className="font-body text-sm mb-1" style={{ color: '#334155' }}>
+            You are about to permanently delete:
+          </p>
+          <p className="font-heading font-semibold text-base mb-6" style={{ color: '#12235A' }}>
+            &quot;{name}&quot;
+          </p>
+          <p className="text-xs mb-8" style={{ color: '#94A3B8' }}>
+            This action cannot be undone. The listing will be removed immediately.
+          </p>
+
+          <div className="flex gap-3 w-full">
+            <button
+              onClick={onCancel}
+              disabled={loading}
+              className="flex-1 py-3 rounded-xl font-heading font-semibold text-sm transition-colors"
+              style={{ backgroundColor: '#F5F7FC', color: '#334155', border: '1px solid #E8ECF4' }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              disabled={loading}
+              className="flex-1 py-3 rounded-xl font-heading font-bold text-sm text-white transition-colors"
+              style={{ backgroundColor: loading ? '#aaa' : '#8E1B2D' }}
+            >
+              {loading ? 'Deleting...' : 'Yes, Delete'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function AdminMarketplacePage() {
   const [listings, setListings] = useState<MarketplaceListing[]>([])
   const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
+  const [deleting, setDeleting] = useState(false)
   const router = useRouter()
 
   const fetchListings = useCallback(async () => {
@@ -22,12 +83,13 @@ export default function AdminMarketplacePage() {
 
   useEffect(() => { fetchListings() }, [fetchListings])
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return
-    setDeleting(id)
-    await fetch(`/api/admin/marketplace/${id}`, { method: 'DELETE' })
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return
+    setDeleting(true)
+    await fetch(`/api/admin/marketplace/${deleteTarget.id}`, { method: 'DELETE' })
     await fetchListings()
-    setDeleting(null)
+    setDeleting(false)
+    setDeleteTarget(null)
   }
 
   const handleLogout = async () => {
@@ -37,6 +99,16 @@ export default function AdminMarketplacePage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F7FC' }}>
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <DeleteConfirmModal
+          name={deleteTarget.name}
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteTarget(null)}
+          loading={deleting}
+        />
+      )}
+
       {/* Top bar */}
       <div className="sticky top-0 z-10 shadow-sm" style={{ backgroundColor: '#12235A' }}>
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -109,12 +181,11 @@ export default function AdminMarketplacePage() {
                     <Edit size={14} /> Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(listing.id, `${listing.make} ${listing.model}`)}
-                    disabled={deleting === listing.id}
+                    onClick={() => setDeleteTarget({ id: listing.id, name: `${listing.make} ${listing.model}` })}
                     className="flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
                     style={{ backgroundColor: '#FDECEA', color: '#8E1B2D' }}
                   >
-                    <Trash2 size={14} /> {deleting === listing.id ? '...' : 'Delete'}
+                    <Trash2 size={14} /> Delete
                   </button>
                 </div>
               </div>

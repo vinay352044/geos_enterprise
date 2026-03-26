@@ -2,11 +2,10 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardActions, Button, Chip } from '@mui/material'
-import { Users, Gauge, Calendar, ArrowRight, MessageCircle } from 'lucide-react'
+import { Users, Gauge, Calendar, ArrowRight, MessageCircle, Car } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
-const PLACEHOLDER = '/images/vehicle-placeholder.svg'
 import { ComplianceBadge } from '@/components/ui/ComplianceBadge'
 import { formatCurrency, formatKm } from '@/lib/utils'
 import { getWhatsAppInquiryUrl } from '@/lib/constants'
@@ -40,16 +39,26 @@ export function ListingCard({ listing }: ListingCardProps) {
       }}
     >
       {/* Image */}
-      <div className="relative h-52 bg-gray-100 overflow-hidden rounded-t-xl">
-        <Image
-          src={imgError || !listing.images[0] ? PLACEHOLDER : listing.images[0]}
-          alt={`${listing.year} ${listing.make} ${listing.model} — GEOS Enterprises fleet marketplace`}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          unoptimized={listing.images[0]?.startsWith('http')}
-          onError={() => setImgError(true)}
-        />
+      <div className="relative h-52 overflow-hidden rounded-t-xl" style={{ backgroundColor: '#0D2B5E' }}>
+        {imgError || !listing.images[0] ? (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-3"
+            style={{ background: 'linear-gradient(135deg, #0D2B5E 0%, #1E3A8A 100%)' }}>
+            <Car size={52} style={{ color: 'rgba(255,255,255,0.18)' }} strokeWidth={1.2} />
+            <span className="text-xs font-heading font-semibold tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.25)' }}>
+              {listing.make} {listing.model}
+            </span>
+          </div>
+        ) : (
+          <Image
+            src={listing.images[0]}
+            alt={`${listing.year} ${listing.make} ${listing.model} — GEOS Enterprises fleet marketplace`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            unoptimized={listing.images[0]?.startsWith('http')}
+            onError={() => setImgError(true)}
+          />
+        )}
         <div className="absolute top-3 left-3 flex flex-col gap-1">
           <ComplianceBadge label="Certified Taxi Plate" />
           <Chip

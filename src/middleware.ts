@@ -34,10 +34,18 @@ async function verifyToken(token: string): Promise<boolean> {
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  const token = req.cookies.get(COOKIE_NAME)?.value
+
+  // If already logged in and visiting /admin/login → redirect to admin dashboard
+  if (pathname === '/admin/login') {
+    if (token && (await verifyToken(token))) {
+      return NextResponse.redirect(new URL('/admin/marketplace', req.url))
+    }
+    return NextResponse.next()
+  }
 
   // Protect all /admin routes except /admin/login
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    const token = req.cookies.get(COOKIE_NAME)?.value
+  if (pathname.startsWith('/admin')) {
     if (!token || !(await verifyToken(token))) {
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
@@ -45,7 +53,6 @@ export async function middleware(req: NextRequest) {
 
   // Protect all /api/admin routes except /api/admin/auth
   if (pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/auth')) {
-    const token = req.cookies.get(COOKIE_NAME)?.value
     if (!token || !(await verifyToken(token))) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }

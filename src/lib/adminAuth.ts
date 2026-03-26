@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers'
 import { createHmac } from 'crypto'
 
-const SECRET = process.env.ADMIN_SECRET || 'geos-admin-secret-2024'
+const SECRET = process.env.ADMIN_SECRET!
 const COOKIE_NAME = 'geos_admin_session'
-const ADMIN_USERNAME = 'admin'
-const ADMIN_PASSWORD = 'Geos@Admin2024'
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME!
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD!
 
 export function createSessionToken(username: string): string {
   const payload = `${username}:${Date.now()}`

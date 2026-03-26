@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { checkAdminCredentials, createSessionToken, COOKIE_NAME } from '@/lib/adminAuth'
+import { checkAdminCredentials, createSessionToken, getAdminSession, COOKIE_NAME } from '@/lib/adminAuth'
+
+export async function GET() {
+  const isLoggedIn = await getAdminSession()
+  return NextResponse.json({ success: true, authenticated: isLoggedIn })
+}
 
 export async function POST(req: NextRequest) {
   const { username, password } = await req.json()

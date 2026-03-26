@@ -16,11 +16,11 @@ export const VEHICLE_CATEGORIES = [
 ] as const
 
 export const SEO_DEFAULTS = {
-  title: 'GEOS Enterprises | Corporate & Government Fleet Logistics India',
+  title: 'Car Rental, Contract Hire & Used Vehicles | GEOS Ahmedabad',
   description:
-    'GEOS Enterprises — Specialized corporate vehicle rental for PSUs, ONGC, BPCL & government. 100% commercially plated taxi fleet. 15+ years, 500+ vehicles.',
+    'Need a car on rent, long-term contract vehicle for your business, or a reliable used car in Ahmedabad? GEOS Enterprises serves contractors, corporates & individuals with flexible, affordable vehicle solutions across Gujarat.',
   keywords:
-    'corporate vehicle rental India, ONGC vehicle contractor, commercial fleet government projects, taxi plated fleet India, PSU vehicle provider, GEOS Enterprises',
+    'car rental Ahmedabad, car on rent Ahmedabad, used cars Ahmedabad, used vehicles Ahmedabad, contract hire Ahmedabad, long term car rental Ahmedabad, vehicle rental Gujarat, commercial vehicle rental Ahmedabad, taxi plated vehicles Gujarat, corporate fleet Ahmedabad, government fleet contractor Gujarat, ONGC vehicle contractor, BPCL fleet services, PSU vehicle provider India, GEOS Enterprises Ahmedabad',
   ogImage: '/images/og-image.jpg',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://geosenterprises.com',
 } as const

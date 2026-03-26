@@ -2,10 +2,16 @@ import type { Metadata } from 'next'
 import { SEO_DEFAULTS } from '@/lib/constants'
 
 export const metadata: Metadata = {
-  title: 'Our Story — GEOS Enterprises | 35+ Years of Fleet Excellence',
+  title: 'About Us — GEOS Enterprises | Car Rental & Fleet Services Since 1988, Ahmedabad',
   description:
-    'Founded in 1988 by George Varghese in Ahmedabad. Learn how GEOS Enterprises became India\'s most trusted corporate fleet partner for PSUs, ONGC, BPCL, Vedanta, and Adani.',
+    'Founded in 1988 by George Varghese in Ahmedabad, Gujarat. GEOS Enterprises has been providing car rental, contract hire & used vehicles to corporates, PSUs & individuals for 35+ years.',
+  keywords: 'GEOS Enterprises history, car rental company Ahmedabad, fleet services Gujarat since 1988, George Varghese GEOS',
   alternates: { canonical: `${SEO_DEFAULTS.url}/about` },
+  openGraph: {
+    title: 'About GEOS Enterprises — Car Rental & Fleet Services Since 1988, Ahmedabad',
+    description: 'Established in 1988 in Ahmedabad. 35+ years of car rental, contract hire & fleet services across Gujarat and India.',
+    url: `${SEO_DEFAULTS.url}/about`,
+  },
 }
 
 const milestones = [
@@ -170,7 +176,7 @@ export default function AboutPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
             {[
-              { label: 'GST Registration', value: '24AABCG1234A1ZK' },
+              { label: 'GST Registration', value: '24AASFG7969G1ZQ' },
               { label: 'Established', value: '1988 — 35+ Years in Operation' },
               { label: 'Headquarters', value: 'Ahmedabad, Gujarat, India' },
             ].map((c) => (

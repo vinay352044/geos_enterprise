@@ -43,12 +43,16 @@ export const metadata: Metadata = {
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': ['AutoDealer', 'LocalBusiness'],
   name: 'GEOS Enterprises',
+  alternateName: 'GEOS Ahmedabad',
   description: SEO_DEFAULTS.description,
   url: SEO_DEFAULTS.url,
+  logo: `${SEO_DEFAULTS.url}/images/geos-logo-new.jpg`,
+  image: `${SEO_DEFAULTS.url}/images/og-image.jpg`,
   telephone: '+91-92274-76900',
   email: 'geosenterprises@gmail.com',
+  foundingDate: '1988',
   address: {
     '@type': 'PostalAddress',
     streetAddress: '507 Aagam Avenue, Near Adani Gas Station, Motera Cross Road',
@@ -57,10 +61,30 @@ const jsonLd = {
     postalCode: '380005',
     addressCountry: 'IN',
   },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: '23.0753',
+    longitude: '72.5898',
+  },
   openingHours: 'Mo-Su 00:00-23:59',
-  priceRange: 'Rs.Rs.Rs.',
-  serviceType: 'Corporate Fleet Logistics',
-  areaServed: 'India',
+  priceRange: '₹₹',
+  areaServed: [
+    { '@type': 'City', name: 'Ahmedabad' },
+    { '@type': 'State', name: 'Gujarat' },
+    { '@type': 'Country', name: 'India' },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Vehicle Services',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Car Rental Ahmedabad' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Long-Term Contract Hire' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Used Vehicle Sales Ahmedabad' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Corporate Fleet Provisioning' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Government Fleet Services Gujarat' } },
+    ],
+  },
+  sameAs: [],
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
