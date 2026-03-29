@@ -10,28 +10,42 @@ const config: Config = {
     extend: {
       colors: {
         navy: {
-          DEFAULT: '#0D2B5E',
+          DEFAULT: '#0D1B3E',
+          light: '#12235A',
           50: '#E8EDF5',
           100: '#C5D2E8',
-          500: '#0D2B5E',
-          600: '#0A2250',
-          700: '#081A3E',
+          500: '#0D1B3E',
+          600: '#0A1530',
+          700: '#070F22',
+        },
+        crimson: {
+          DEFAULT: '#8E1B2D',
+          dark: '#6B1321',
+        },
+        amber: {
+          DEFAULT: '#F0A500',
+          dark: '#C98B00',
+        },
+        electric: {
+          DEFAULT: '#2563EB',
+          light: '#3B82F6',
         },
         slate: {
           DEFAULT: '#334155',
+          muted: '#64748B',
         },
         accent: {
-          DEFAULT: '#1E40AF',
+          DEFAULT: '#1E3A8A',
           light: '#2563EB',
         },
         success: '#166534',
         warning: '#92400E',
         error: '#991B1B',
-        'bg-light': '#F1F5F9',
+        'bg-light': '#F5F8FF',
       },
       fontFamily: {
         heading: ['Montserrat', 'sans-serif'],
-        body: ['Roboto', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
       },
       spacing: {
         '1': '8px',

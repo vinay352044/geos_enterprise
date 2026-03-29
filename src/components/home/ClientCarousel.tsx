@@ -27,7 +27,7 @@ const featuredClients = [
   },
   {
     id: 'gvk',
-    category: 'EMERGENCY SERVICES · HEALTHCARE',
+    category: 'EMERGENCY · HEALTHCARE',
     name: 'GVK EMRI',
     description: 'Operating India\'s 108 ambulance service — where every minute counts.',
     logo: '/images/clients/gvk-emri.jpg',
@@ -53,7 +53,7 @@ const featuredClients = [
     id: 'more',
     category: 'GOVERNMENT CONTRACTS',
     name: '+ More',
-    description: 'Multiple state and central government departments served across Gujarat and beyond.',
+    description: 'Multiple state and central government departments across Gujarat and beyond.',
     logo: null,
     accent: '#10B981',
     isMore: true,
@@ -61,23 +61,31 @@ const featuredClients = [
 ]
 
 function LogoCarousel() {
-  const autoplay = useRef(Autoplay({ delay: 2000, stopOnInteraction: false }))
+  const autoplay = useRef(Autoplay({ delay: 1800, stopOnInteraction: false }))
   const [emblaRef] = useEmblaCarousel({ loop: true, align: 'start', dragFree: true }, [autoplay.current])
 
   return (
     <div className="overflow-hidden" ref={emblaRef}>
-      <div className="flex gap-6">
+      <div className="flex gap-5">
         {[...clients, ...clients].map((client, idx) => (
           <div key={`${client.id}-${idx}`} className="flex-none flex flex-col items-center gap-2">
             <div
-              className="w-28 h-16 rounded-lg overflow-hidden flex items-center justify-center p-2 transition-all duration-300"
-              style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+              className="w-24 h-14 rounded-xl overflow-hidden flex items-center justify-center p-2.5 transition-all duration-300"
+              style={{
+                backgroundColor: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.07)',
+              }}
             >
               <div className="relative w-full h-full">
-                <Image src={client.logoPath} alt={client.name} fill className="object-contain" sizes="112px" />
+                <Image src={client.logoPath} alt={client.name} fill className="object-contain opacity-60 hover:opacity-90 transition-opacity" sizes="96px" />
               </div>
             </div>
-            <span className="text-xs font-heading font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>{client.name}</span>
+            <span
+              className="text-[10px] font-heading font-semibold tracking-wide"
+              style={{ color: 'rgba(255,255,255,0.3)' }}
+            >
+              {client.name}
+            </span>
           </div>
         ))}
       </div>
@@ -86,94 +94,121 @@ function LogoCarousel() {
 }
 
 export function ClientCarousel() {
-  const { ref, inView } = useInView(0.15)
+  const { ref, inView } = useInView(0.1)
 
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
-      className="py-24"
-      style={{ backgroundColor: '#0B1E4A' }}
       aria-label="Our clients"
+      className="section-py"
+      style={{
+        background: 'linear-gradient(180deg, #070E1E 0%, #0A1528 50%, #060E1A 100%)',
+      }}
     >
-      <div className="container mx-auto px-4">
+      <div className="container-wide">
         {/* Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16 items-end">
-          <div>
-            <div className="flex items-center gap-3 mb-5">
-              <span
-                className="font-heading font-bold text-xs tracking-[0.2em] uppercase px-3 py-1.5 rounded-full"
-                style={{ backgroundColor: 'rgba(240,165,0,0.12)', color: '#F0A500', border: '1px solid rgba(240,165,0,0.25)' }}
-              >
-                TRUSTED BY
-              </span>
-            </div>
-            <h2 className="font-heading font-extrabold text-white leading-tight text-4xl lg:text-5xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-14 items-end">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span
+              className="inline-flex items-center gap-2 font-heading font-bold text-[10px] tracking-[0.22em] uppercase px-3.5 py-2 rounded-full mb-6"
+              style={{
+                backgroundColor: 'rgba(240,165,0,0.1)',
+                color: '#F0A500',
+                border: '1px solid rgba(240,165,0,0.22)',
+              }}
+            >
+              TRUSTED BY INDIA&apos;S BEST
+            </span>
+            <h2
+              className="font-heading font-extrabold text-white leading-tight"
+              style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', letterSpacing: '-0.02em' }}
+            >
               Powering{' '}
               <em style={{ color: '#F0A500', fontStyle: 'italic' }}>India&apos;s</em>
               <br />Biggest Names.
             </h2>
-          </div>
-          <div>
-            <p className="font-body text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <p className="font-body text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
               From state-owned oil giants to private conglomerates building tomorrow&apos;s India — our fleet has served the organisations that move the nation forward.
             </p>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Client Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Client Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {featuredClients.map((client, idx) => (
             <motion.div
               key={client.id}
               initial={{ opacity: 0, y: 24 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="relative group rounded-xl p-6 flex flex-col min-h-[200px] overflow-hidden transition-all duration-300"
+              transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative rounded-2xl p-6 flex flex-col min-h-[180px] overflow-hidden transition-all duration-300"
               style={{
-                backgroundColor: client.isMore ? 'rgba(16,185,129,0.06)' : 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.07)',
+                backgroundColor: client.isMore ? `${client.accent}08` : 'rgba(255,255,255,0.03)',
+                border: '1px solid rgba(255,255,255,0.06)',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLDivElement
+                el.style.backgroundColor = `${client.accent}08`
+                el.style.borderColor = `${client.accent}20`
+                el.style.transform = 'translateY(-3px)'
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLDivElement
+                el.style.backgroundColor = client.isMore ? `${client.accent}08` : 'rgba(255,255,255,0.03)'
+                el.style.borderColor = 'rgba(255,255,255,0.06)'
+                el.style.transform = 'translateY(0)'
               }}
             >
-              {/* Left accent bar */}
+              {/* Left accent line */}
               <div
-                className="absolute left-0 top-6 bottom-6 w-0.5 rounded-full transition-all duration-300 group-hover:top-4 group-hover:bottom-4"
+                className="absolute left-0 top-5 bottom-5 w-[3px] rounded-full transition-all duration-300 group-hover:top-3 group-hover:bottom-3"
                 style={{ backgroundColor: client.accent }}
               />
 
-              {/* Top row: category + logo */}
-              <div className="flex items-start justify-between mb-4 pl-4">
+              {/* Category + Logo */}
+              <div className="flex items-start justify-between mb-4 pl-5">
                 <span
-                  className="font-heading font-bold text-[10px] tracking-[0.18em] uppercase px-2.5 py-1 rounded-md"
-                  style={{ backgroundColor: `${client.accent}18`, color: client.accent }}
+                  className="font-heading font-bold text-[10px] tracking-[0.16em] uppercase px-2.5 py-1 rounded-lg"
+                  style={{ backgroundColor: `${client.accent}15`, color: client.accent }}
                 >
                   {client.category}
                 </span>
                 {client.logo && (
                   <div
-                    className="relative w-12 h-8 rounded-md overflow-hidden flex-shrink-0 ml-3"
+                    className="relative w-11 h-7 rounded-lg overflow-hidden flex-shrink-0 ml-3"
                     style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
                   >
-                    <Image src={client.logo} alt={client.name} fill className="object-contain p-1" sizes="48px" />
+                    <Image src={client.logo} alt={client.name} fill className="object-contain p-1" sizes="44px" />
                   </div>
                 )}
               </div>
 
-              {/* Client name & description */}
-              <div className="flex-1 pl-4">
+              {/* Name & Description */}
+              <div className="flex-1 pl-5">
                 <h3
-                  className="font-heading font-extrabold text-2xl mb-2 transition-colors duration-200"
+                  className="font-heading font-extrabold text-xl mb-2 leading-tight"
                   style={{ color: client.isMore ? client.accent : '#ffffff' }}
                 >
                   {client.name}
                 </h3>
-                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.42)' }}>
                   {client.description}
                 </p>
               </div>
 
-              {/* Subtle hover glow */}
+              {/* Hover glow */}
               <div
-                className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                 style={{ background: `radial-gradient(ellipse at top left, ${client.accent}0A 0%, transparent 60%)` }}
               />
             </motion.div>
@@ -181,12 +216,21 @@ export function ClientCarousel() {
         </div>
 
         {/* Logo Carousel */}
-        <div className="mt-16 pt-12" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-          <p className="text-center font-heading text-xs tracking-[0.2em] uppercase mb-8" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.55, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-14 pt-12"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <p
+            className="text-center font-heading font-bold text-[10px] tracking-[0.22em] uppercase mb-8"
+            style={{ color: 'rgba(255,255,255,0.2)' }}
+          >
             ALSO SERVING
           </p>
           <LogoCarousel />
-        </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -1,11 +1,18 @@
 'use client'
 
-import { Box, Grid, Typography, Divider } from '@mui/material'
-import { Phone, Mail, MapPin, Shield, CheckCircle, FileText } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Phone, Mail, MapPin, Shield, CheckCircle, FileText, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { companyInfo } from '@/data/companyInfo'
 import { NAV_LINKS, VEHICLE_CATEGORIES } from '@/lib/constants'
+
+const complianceBadges = [
+  { icon: CheckCircle, text: '100% Taxi Plated Fleet', color: '#4ADE80' },
+  { icon: Shield, text: 'GST Registered', color: '#60A5FA' },
+  { icon: FileText, text: 'All India Tourist Permit', color: '#FBBF24' },
+  { icon: CheckCircle, text: 'Commercial Insurance', color: '#4ADE80' },
+]
 
 export function Footer() {
   const pathname = usePathname()
@@ -14,171 +21,185 @@ export function Footer() {
   if (pathname.startsWith('/admin')) return null
 
   return (
-    <Box component="footer" sx={{ backgroundColor: '#0D2B5E', color: '#ffffff' }}>
-      {/* Compliance Banner */}
-      <Box sx={{ backgroundColor: '#081A3E', py: 2, px: 4 }}>
-        <Box
-          sx={{
-            maxWidth: '1400px',
-            mx: 'auto',
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: 3,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          {[
-            { icon: <CheckCircle size={16} />, text: '100% Taxi Plated Fleet' },
-            { icon: <Shield size={16} />, text: 'GST Registered' },
-            { icon: <FileText size={16} />, text: 'All India Tourist Permit' },
-            { icon: <CheckCircle size={16} />, text: 'Commercial Insurance' },
-          ].map((badge) => (
-            <div key={badge.text} className="flex items-center gap-2 text-green-300 text-sm font-heading font-semibold">
-              {badge.icon}
-              <span>{badge.text}</span>
+    <footer
+      style={{
+        background: 'linear-gradient(180deg, #06101E 0%, #040B16 100%)',
+        borderTop: '1px solid rgba(255,255,255,0.05)',
+      }}
+    >
+      {/* Compliance strip */}
+      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+        <div className="container-wide py-3">
+          <div className="flex flex-wrap gap-x-8 gap-y-2 justify-center items-center">
+            {complianceBadges.map((badge) => {
+              const Icon = badge.icon
+              return (
+                <div
+                  key={badge.text}
+                  className="flex items-center gap-2 text-xs font-heading font-semibold tracking-wide"
+                  style={{ color: badge.color }}
+                >
+                  <Icon size={13} />
+                  <span>{badge.text}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Main footer body */}
+      <div className="container-wide py-14 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
+
+          {/* Brand column */}
+          <div className="lg:col-span-1">
+            <div className="mb-5">
+              <h3 className="font-heading font-bold text-white text-lg mb-1">GEOS Enterprises</h3>
+              <div className="h-0.5 w-8 rounded-full" style={{ backgroundColor: '#8E1B2D' }} />
             </div>
-          ))}
-        </Box>
-      </Box>
+            <p className="font-body text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              Specialized vehicle provisioning for Government &amp; Corporate sectors. 100% Commercially Plated Fleet serving India&apos;s critical infrastructure since 1988.
+            </p>
 
-      {/* Main Footer */}
-      <Box sx={{ maxWidth: '1400px', mx: 'auto', px: { xs: 2, md: 4 }, py: { xs: 6, md: 8 } }}>
-        <Grid container spacing={4}>
-          {/* Company Info */}
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Typography
-              variant="h6"
-              sx={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, color: '#ffffff', mb: 2 }}
-            >
-              GEOS Enterprises
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: '#93C5FD', mb: 3, lineHeight: 1.7, maxWidth: '300px' }}
-            >
-              Specialized vehicle provisioning for Government &amp; Corporate sectors. 100% Commercially
-              Plated Fleet serving India&apos;s critical infrastructure since 2009.
-            </Typography>
-
-            <div className="space-y-2">
+            <div className="space-y-3">
               <a
                 href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
-                className="flex items-center gap-2 text-blue-200 hover:text-white transition-colors text-sm"
+                className="flex items-center gap-3 group transition-colors"
               >
-                <Phone size={16} className="flex-shrink-0" />
-                <span>{companyInfo.phone}</span>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
+                  <Phone size={13} style={{ color: '#60A5FA' }} />
+                </div>
+                <span className="font-body text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  <span className="group-hover:text-white transition-colors">{companyInfo.phone}</span>
+                </span>
               </a>
+
               <a
                 href={`mailto:${companyInfo.email}`}
-                className="flex items-center gap-2 text-blue-200 hover:text-white transition-colors text-sm"
+                className="flex items-center gap-3 group transition-colors"
               >
-                <Mail size={16} className="flex-shrink-0" />
-                <span>{companyInfo.email}</span>
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
+                  <Mail size={13} style={{ color: '#60A5FA' }} />
+                </div>
+                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  {companyInfo.email}
+                </span>
               </a>
-              <div className="flex items-start gap-2 text-blue-200 text-sm">
-                <MapPin size={16} className="flex-shrink-0 mt-0.5" />
-                <span>{companyInfo.address.full}</span>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
+                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
+                  <MapPin size={13} style={{ color: '#60A5FA' }} />
+                </div>
+                <span className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  {companyInfo.address.full}
+                </span>
               </div>
             </div>
-          </Grid>
+          </div>
 
           {/* Quick Links */}
-          <Grid size={{ xs: 6, md: 2 }}>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, color: '#ffffff', mb: 2 }}
-            >
+          <div>
+            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
               Quick Links
-            </Typography>
-            <ul className="space-y-2">
+            </h4>
+            <ul className="space-y-3">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-blue-200 hover:text-white text-sm transition-colors"
+                    className="flex items-center gap-1.5 text-sm font-body group transition-colors"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
                   >
-                    {link.label}
+                    <span className="w-1 h-1 rounded-full bg-blue-500/40 group-hover:bg-blue-400 transition-colors flex-shrink-0" />
+                    <span className="group-hover:text-white transition-colors">{link.label}</span>
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/privacy-policy" className="text-blue-200 hover:text-white text-sm transition-colors">
-                  Privacy Policy
+                <Link
+                  href="/privacy-policy"
+                  className="flex items-center gap-1.5 text-sm font-body group transition-colors"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                >
+                  <span className="w-1 h-1 rounded-full bg-blue-500/40 group-hover:bg-blue-400 transition-colors flex-shrink-0" />
+                  <span className="group-hover:text-white transition-colors">Privacy Policy</span>
                 </Link>
               </li>
             </ul>
-          </Grid>
+          </div>
 
           {/* Fleet Categories */}
-          <Grid size={{ xs: 6, md: 3 }}>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, color: '#ffffff', mb: 2 }}
-            >
+          <div>
+            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
               Fleet Categories
-            </Typography>
-            <ul className="space-y-2">
+            </h4>
+            <ul className="space-y-3">
               {VEHICLE_CATEGORIES.filter((c) => c !== 'All').map((cat) => (
                 <li key={cat}>
                   <Link
                     href={`/fleet?category=${encodeURIComponent(cat)}`}
-                    className="text-blue-200 hover:text-white text-sm transition-colors"
+                    className="flex items-center gap-1.5 text-sm font-body group transition-colors"
+                    style={{ color: 'rgba(255,255,255,0.45)' }}
                   >
-                    {cat}
+                    <span className="w-1 h-1 rounded-full bg-amber-500/40 group-hover:bg-amber-400 transition-colors flex-shrink-0" />
+                    <span className="group-hover:text-white transition-colors">{cat}</span>
                   </Link>
                 </li>
               ))}
             </ul>
-          </Grid>
+          </div>
 
-          {/* GST & Legal */}
-          <Grid size={{ xs: 12, md: 3 }}>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontFamily: '"Montserrat", sans-serif', fontWeight: 700, color: '#ffffff', mb: 2 }}
-            >
+          {/* Legal & CTA */}
+          <div>
+            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
               Legal &amp; Compliance
-            </Typography>
-            <div className="space-y-2 text-sm text-blue-200">
-              <p>
-                <span className="text-white font-semibold">GST:</span> {companyInfo.gst}
-              </p>
-              <p>
-                <span className="text-white font-semibold">CIN:</span> {companyInfo.cin}
-              </p>
-              <p>
-                <span className="text-white font-semibold">Est.:</span>{' '}
-                {companyInfo.establishedYear}
-              </p>
+            </h4>
+            <div className="space-y-3 text-sm font-body mb-8">
+              {[
+                { label: 'GST', value: companyInfo.gst },
+                { label: 'CIN', value: companyInfo.cin },
+                { label: 'Est.', value: companyInfo.establishedYear },
+              ].map((item) => (
+                <div key={item.label}>
+                  <span className="font-heading font-semibold text-xs uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                    {item.label}
+                  </span>
+                  <p style={{ color: 'rgba(255,255,255,0.55)' }}>{item.value}</p>
+                </div>
+              ))}
             </div>
-          </Grid>
-        </Grid>
-      </Box>
 
-      <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+            {/* Book CTA */}
+            <Link
+              href="/#call-basis-form"
+              className="inline-flex items-center gap-2 font-heading font-bold text-xs uppercase tracking-wider text-white px-5 py-3 rounded-xl transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #C21E35 0%, #7A1525 100%)',
+                boxShadow: '0 4px 16px rgba(142,27,45,0.35)',
+              }}
+            >
+              Book a Vehicle
+              <ArrowUpRight size={13} />
+            </Link>
+          </div>
+        </div>
+      </div>
 
-      {/* Copyright */}
-      <Box
-        sx={{
-          maxWidth: '1400px',
-          mx: 'auto',
-          px: { xs: 2, md: 4 },
-          py: 3,
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 2,
-        }}
-      >
-        <Typography variant="body2" sx={{ color: '#93C5FD' }}>
-          © {currentYear} GEOS Enterprises. All rights reserved.
-        </Typography>
-        <Typography variant="body2" sx={{ color: '#93C5FD' }}>
-          Corporate vehicle rental India | PSU fleet logistics
-        </Typography>
-      </Box>
-    </Box>
+      {/* Bottom bar */}
+      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="container-wide py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            © {currentYear} GEOS Enterprises. All rights reserved.
+          </p>
+          <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            Corporate vehicle rental India · PSU fleet logistics
+          </p>
+        </div>
+      </div>
+    </footer>
   )
 }

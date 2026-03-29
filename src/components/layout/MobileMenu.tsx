@@ -1,7 +1,8 @@
 'use client'
 
-import { Drawer, List, ListItem, ListItemButton, ListItemText, Divider, Box, IconButton } from '@mui/material'
-import { X, Phone } from 'lucide-react'
+import { useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { X, Phone, ChevronRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -17,109 +18,158 @@ export function MobileMenu() {
 
   const handleClose = () => dispatch(setMobileMenuOpen(false))
 
+  // Close on route change
+  useEffect(() => {
+    handleClose()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
+
+  // Lock body scroll when open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   if (pathname.startsWith('/admin')) return null
 
   return (
-    <Drawer
-      anchor="right"
-      open={open}
-      onClose={handleClose}
-      PaperProps={{
-        sx: {
-          width: '100%',
-          maxWidth: '320px',
-          backgroundColor: '#12235A',
-          color: '#ffffff',
-        },
-      }}
-    >
-      <Box className="flex flex-col h-full">
-        {/* Header */}
-        <Box className="flex justify-between items-center p-4 border-b border-white/10">
-          <div className="relative h-10 w-10">
-            <Image src="/images/geos-logo-new.jpg" alt="GEOS Enterprises" fill className="object-contain rounded" />
-          </div>
-          <IconButton
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
             onClick={handleClose}
-            aria-label="Close menu"
-            sx={{ color: '#ffffff' }}
-          >
-            <X size={24} />
-          </IconButton>
-        </Box>
+          />
 
-        {/* Nav Links */}
-        <List className="flex-1 py-4">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href
-            return (
-              <ListItem key={link.href} disablePadding>
-                <ListItemButton
-                  component={Link}
-                  href={link.href}
-                  onClick={handleClose}
-                  sx={{
-                    py: 1.5,
-                    px: 3,
-                    backgroundColor: isActive ? 'rgba(255,255,255,0.1)' : 'transparent',
-                    borderLeft: isActive ? '3px solid #1E40AF' : '3px solid transparent',
-                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.08)' },
-                  }}
-                >
-                  <ListItemText
-                    primary={link.label}
-                    primaryTypographyProps={{
-                      fontFamily: '"Montserrat", sans-serif',
-                      fontWeight: isActive ? 700 : 400,
-                      fontSize: '16px',
-                      color: '#ffffff',
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
-        </List>
+          {/* Drawer */}
+          <motion.div
+            key="drawer"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            className="fixed top-0 right-0 bottom-0 z-[70] w-full max-w-[320px] flex flex-col overflow-hidden"
+            style={{
+              background: 'linear-gradient(160deg, #0A1628 0%, #0D1B3E 100%)',
+              borderLeft: '1px solid rgba(255,255,255,0.07)',
+            }}
+          >
+            {/* Subtle orb */}
+            <div
+              className="absolute top-0 right-0 pointer-events-none"
+              style={{
+                width: '300px',
+                height: '300px',
+                background: 'radial-gradient(circle, rgba(37,99,235,0.12) 0%, transparent 70%)',
+                filter: 'blur(40px)',
+              }}
+            />
 
-        <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+            {/* Header */}
+            <div className="relative flex items-center justify-between px-5 py-4 border-b border-white/[0.07]">
+              <Link href="/" onClick={handleClose} className="flex items-center gap-3 outline-none">
+                <div className="relative h-8 w-8 rounded-lg overflow-hidden ring-1 ring-white/15">
+                  <Image src="/images/geos-logo-new.jpg" alt="GEOS Enterprises" fill className="object-cover" />
+                </div>
+                <div className="flex flex-col leading-none">
+                  <span className="font-heading font-bold text-white text-sm">GEOS</span>
+                  <span className="font-body text-[10px] text-blue-200/50 tracking-widest uppercase">Enterprises</span>
+                </div>
+              </Link>
+              <button
+                onClick={handleClose}
+                className="flex items-center justify-center w-9 h-9 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all"
+                aria-label="Close menu"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-        {/* CTAs */}
-        <Box className="p-4 space-y-3">
-          <Link
-            href="/#call-basis-form"
-            onClick={handleClose}
-            className="block w-full text-center bg-accent text-white font-heading font-bold text-base uppercase tracking-wide py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Book a Vehicle
-          </Link>
-          <a
-            href="https://portal.geosenterprises.in/login"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full text-center border border-white/30 text-white font-heading font-semibold text-base uppercase tracking-wide py-3 px-6 rounded-md hover:bg-white/10 transition-colors"
-          >
-            Login to Portal
-          </a>
-          <Link
-            href="/admin/login"
-            onClick={handleClose}
-            className="block w-full text-center border border-white/30 text-white font-heading font-semibold text-base uppercase tracking-wide py-3 px-6 rounded-md hover:bg-white/10 transition-colors"
-          >
-            Admin Login
-          </Link>
-        </Box>
+            {/* Nav Links */}
+            <nav className="relative flex-1 py-4 overflow-y-auto">
+              <div className="px-3 space-y-0.5">
+                {NAV_LINKS.map((link, idx) => {
+                  const isActive = pathname === link.href
+                  return (
+                    <motion.div
+                      key={link.href}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.06 + 0.1, duration: 0.3 }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={handleClose}
+                        className="flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 group"
+                        style={{
+                          backgroundColor: isActive ? 'rgba(37,99,235,0.12)' : 'transparent',
+                          borderLeft: isActive ? '2px solid #2563EB' : '2px solid transparent',
+                        }}
+                      >
+                        <span
+                          className="font-heading font-semibold text-base"
+                          style={{ color: isActive ? '#ffffff' : 'rgba(255,255,255,0.6)' }}
+                        >
+                          {link.label}
+                        </span>
+                        <ChevronRight
+                          size={16}
+                          className="transition-transform duration-200 group-hover:translate-x-1"
+                          style={{ color: isActive ? '#2563EB' : 'rgba(255,255,255,0.25)' }}
+                        />
+                      </Link>
+                    </motion.div>
+                  )
+                })}
+              </div>
+            </nav>
 
-        {/* Phone */}
-        <Box className="px-4 pb-6">
-          <a
-            href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
-            className="flex items-center gap-2 text-blue-200 hover:text-white transition-colors text-sm"
-          >
-            <Phone size={16} />
-            <span>{companyInfo.phone}</span>
-          </a>
-        </Box>
-      </Box>
-    </Drawer>
+            {/* Bottom CTAs */}
+            <div className="relative px-5 pb-8 pt-4 space-y-3 border-t border-white/[0.07]">
+              <Link
+                href="/#call-basis-form"
+                onClick={handleClose}
+                className="flex items-center justify-center gap-2 w-full font-heading font-bold text-sm uppercase tracking-wider text-white py-3.5 px-6 rounded-xl transition-all duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, #C21E35 0%, #7A1525 100%)',
+                  boxShadow: '0 4px 20px rgba(142,27,45,0.4)',
+                }}
+              >
+                Book a Vehicle
+              </Link>
+
+              <a
+                href="https://portal.geosenterprises.in/login"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full font-heading font-semibold text-sm uppercase tracking-wider text-blue-200/70 py-3.5 px-6 rounded-xl hover:text-white hover:bg-white/[0.06] transition-all border border-white/10"
+              >
+                Login to Portal
+                <ArrowUpRight size={14} />
+              </a>
+
+              {/* Phone */}
+              <a
+                href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
+                className="flex items-center justify-center gap-2 text-sm font-body text-blue-200/40 hover:text-blue-200/70 transition-colors pt-1"
+              >
+                <Phone size={14} />
+                {companyInfo.phone}
+              </a>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   )
 }
