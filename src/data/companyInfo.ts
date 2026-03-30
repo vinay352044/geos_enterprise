@@ -13,7 +13,7 @@ export const companyInfo = {
     pincode: '380005',
     full: '507 Aagam Avenue, Near Adani Gas Station, Motera Cross Road, Sabarmati, Ahmedabad - 380005',
   },
-  gst: '06AABCG1234A1Z5',
+  gst: '24AASFG7969G1ZQ',
   cin: 'U60220HR2009PTC012345',
   establishedYear: 2009,
   fleetSize: 500,

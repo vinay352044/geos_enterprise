@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import nodemailer from 'nodemailer'
 
-const NOTIFY_EMAILS = ['vinaysharma352044@gmail.com', 'geosenterprises@gmail.com']
+const NOTIFY_EMAILS = ['geosenterprises@gmail.com']
 
 export async function sendLeadEmail(lead: {
   leadId: string
