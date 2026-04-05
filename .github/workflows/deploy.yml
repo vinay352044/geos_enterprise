@@ -1,0 +1,30 @@
+name: Deploy GEOS Website
+
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            export NVM_DIR="/home/deploy/.nvm"
+            export PATH="/home/deploy/.nvm/versions/node/v24.14.1/bin:$PATH"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
+            cd /home/deploy/codebase/geos_enterprise
+            git pull origin development
+            /home/deploy/.nvm/versions/node/v24.14.1/bin/npm install
+            /home/deploy/.nvm/versions/node/v24.14.1/bin/npm run build
+            /home/deploy/.nvm/versions/node/v24.14.1/bin/pm2 describe geos-website > /dev/null 2>&1 && /home/deploy/.nvm/versions/node/v24.14.1/bin/pm2 restart geos-website || /home/deploy/.nvm/versions/node/v24.14.1/bin/pm2 start npm --name "geos-website" -- run start
+            /home/deploy/.nvm/versions/node/v24.14.1/bin/pm2 save
