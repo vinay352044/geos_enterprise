@@ -1,7 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { CheckCircle, Award, Users, Calendar, Building } from 'lucide-react'
+import { CheckCircle, Calendar, Building } from 'lucide-react'
+
+const ease = [0.25, 1, 0.5, 1] as const
 
 const milestones = [
   {
@@ -32,12 +34,6 @@ const credentials = [
   { label: 'Headquarters', value: 'Ahmedabad, Gujarat, India', icon: Building },
 ]
 
-const stats = [
-  { value: '35+', label: 'YEARS OF\nSERVICE' },
-  { value: '100%', label: 'COMMERCIALLY\nPLATED' },
-  { value: '8+', label: 'MAJOR\nCLIENTS' },
-]
-
 export default function AboutPage() {
   return (
     <>
@@ -45,86 +41,65 @@ export default function AboutPage() {
       <section
         className="relative overflow-hidden"
         style={{
-          background: 'linear-gradient(155deg, #040B18 0%, #0A1830 35%, #0C1F4A 60%, #060E1A 100%)',
-          paddingTop: 'clamp(100px, 12vw, 160px)',
+          background: '#0a0f1c',
+          paddingTop: 'clamp(120px, 14vw, 180px)',
           paddingBottom: 'clamp(64px, 8vw, 100px)',
         }}
       >
-        {/* Background orbs */}
+        {/* Subtle warm glow */}
         <div
           className="absolute pointer-events-none"
           style={{
-            width: '700px', height: '700px', top: '-200px', left: '-150px',
-            background: 'radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 65%)',
+            width: '600px', height: '600px', top: '-100px', right: '-100px',
+            background: 'radial-gradient(circle, rgba(200,149,108,0.06) 0%, transparent 60%)',
             filter: 'blur(80px)',
           }}
         />
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: '500px', height: '500px', bottom: '-100px', right: '-100px',
-            background: 'radial-gradient(circle, rgba(142,27,45,0.12) 0%, transparent 65%)',
-            filter: 'blur(70px)',
-          }}
-        />
-
-        {/* Watermark year */}
-        <span
-          className="absolute left-4 top-1/2 -translate-y-1/2 font-heading font-extrabold select-none pointer-events-none"
-          style={{ fontSize: 'clamp(100px, 18vw, 200px)', color: 'rgba(255,255,255,0.025)', lineHeight: 1 }}
-          aria-hidden="true"
-        >
-          1988
-        </span>
 
         <div className="container-wide relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left */}
             <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease }}
             >
-              <p
-                className="font-heading font-bold text-[11px] tracking-[0.2em] uppercase mb-6 flex items-center gap-3"
-                style={{ color: '#F0A500' }}
-              >
-                <span style={{ display: 'inline-block', height: '2px', width: '28px', backgroundColor: '#F0A500', borderRadius: '2px' }} />
-                EST. 1988 · AHMEDABAD, INDIA
-              </p>
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-8 h-[1px] bg-[#c8956c]" />
+                <span className="font-body text-[12px] font-medium tracking-[0.15em] uppercase text-[#c8956c]">
+                  Est. 1988 &middot; Ahmedabad, India
+                </span>
+              </div>
 
-              <h1 className="font-heading font-extrabold text-white mb-6 leading-tight" style={{ letterSpacing: '-0.02em' }}>
+              <h1
+                className="font-heading font-extrabold text-white mb-6"
+                style={{
+                  fontSize: 'clamp(36px, 4.5vw, 60px)',
+                  lineHeight: 1.06,
+                  letterSpacing: '-0.035em',
+                }}
+              >
                 India&apos;s Most{' '}
-                <em style={{ color: '#F0A500', fontStyle: 'italic' }}>Trusted</em>
+                <span className="italic" style={{ color: '#c8956c' }}>Trusted</span>
                 <br />Fleet Partner.
               </h1>
 
-              <p className="font-body text-lg leading-relaxed mb-10 max-w-lg" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              <p className="font-body text-base leading-relaxed max-w-lg" style={{ color: 'rgba(255,255,255,0.4)' }}>
                 From government corridors to the heart of India&apos;s energy sector — Geos Enterprises has delivered reliable, compliant fleet solutions for over three decades.
               </p>
 
-              {/* Stats strip */}
-              <div
-                className="flex flex-wrap items-stretch divide-x divide-white/10"
-                style={{
-                  borderLeft: '3px solid #8E1B2D',
-                  borderRadius: '0 8px 8px 0',
-                }}
-              >
-                {stats.map((s) => (
-                  <div key={s.label} className="px-6 py-2 first:pl-6">
-                    <div
-                      className="font-heading font-extrabold text-white"
-                      style={{ fontSize: '2rem', lineHeight: 1.1 }}
-                    >
+              {/* Stats */}
+              <div className="flex items-center gap-10 mt-10">
+                {[
+                  { value: '35+', label: 'Years' },
+                  { value: '100%', label: 'Plated' },
+                  { value: '25+', label: 'Clients' },
+                ].map((s) => (
+                  <div key={s.label}>
+                    <div className="font-heading font-extrabold text-white text-2xl" style={{ letterSpacing: '-0.02em' }}>
                       {s.value}
                     </div>
-                    <div
-                      className="font-heading font-semibold text-[10px] tracking-widest mt-1 whitespace-pre-line"
-                      style={{ color: 'rgba(255,255,255,0.4)' }}
-                    >
-                      {s.label}
-                    </div>
+                    <div className="font-body text-[11px] text-white/30 mt-0.5">{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -132,38 +107,36 @@ export default function AboutPage() {
 
             {/* Right — Founder card */}
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease }}
               className="flex justify-center lg:justify-end"
             >
               <div
                 className="w-full max-w-sm rounded-2xl p-8 relative"
                 style={{
-                  backgroundColor: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  backdropFilter: 'blur(12px)',
+                  backgroundColor: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.06)',
                 }}
               >
-                <div className="absolute top-0 left-8 h-0.5 w-16 rounded-full" style={{ backgroundColor: '#8E1B2D' }} />
-                <p className="font-heading font-bold text-[10px] tracking-[0.2em] uppercase mb-6" style={{ color: '#F0A500' }}>
-                  FOUNDER &amp; CHAIRMAN
-                </p>
+                <span className="font-body text-[11px] font-medium tracking-[0.12em] uppercase text-[#c8956c] mb-6 block">
+                  Founder &amp; Chairman
+                </span>
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center font-heading font-bold text-xl mb-6"
-                  style={{ border: '2px solid rgba(240,165,0,0.4)', color: '#F0A500', backgroundColor: 'rgba(240,165,0,0.08)' }}
+                  className="w-14 h-14 rounded-xl flex items-center justify-center font-heading font-bold text-lg mb-5"
+                  style={{ border: '1px solid rgba(200,149,108,0.3)', color: '#c8956c', backgroundColor: 'rgba(200,149,108,0.06)' }}
                 >
                   GV
                 </div>
-                <h3 className="font-heading font-bold text-white text-2xl mb-1">George Varghese</h3>
-                <p className="font-heading font-semibold text-[10px] tracking-[0.16em] mb-6" style={{ color: '#F0A500' }}>
-                  VISIONARY · ENTREPRENEUR · LEADER
+                <h3 className="font-heading font-bold text-white text-xl mb-1">George Varghese</h3>
+                <p className="font-body text-[11px] text-white/30 tracking-wide mb-5">
+                  Visionary &middot; Entrepreneur &middot; Leader
                 </p>
                 <blockquote
                   className="font-body italic leading-relaxed text-sm"
                   style={{
-                    color: 'rgba(255,255,255,0.55)',
-                    borderLeft: '3px solid #8E1B2D',
+                    color: 'rgba(255,255,255,0.4)',
+                    borderLeft: '2px solid rgba(200,149,108,0.3)',
                     paddingLeft: '16px',
                   }}
                 >
@@ -176,52 +149,52 @@ export default function AboutPage() {
       </section>
 
       {/* Story + Milestones */}
-      <section className="section-py bg-white">
+      <section className="section-py bg-[#fafaf8]">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Story */}
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, ease }}
             >
               <span className="section-label mb-5 inline-flex">OUR STORY</span>
 
               <h2
-                className="font-heading font-extrabold mb-8 leading-tight"
-                style={{ color: '#0D1B3E' }}
+                className="font-heading font-extrabold mb-8"
+                style={{ color: '#0a0f1c', letterSpacing: '-0.025em', lineHeight: 1.1 }}
               >
-                Three Decades of<br />
-                <span style={{ color: '#8E1B2D' }}>Driving India Forward.</span>
+                Three decades of
+                <br />
+                <span style={{ color: '#c8956c' }}>driving India forward.</span>
               </h2>
 
-              <div className="space-y-5 font-body leading-relaxed" style={{ color: '#475569' }}>
+              <div className="space-y-5 font-body text-[15px] leading-relaxed" style={{ color: '#6b7280' }}>
                 <p>
-                  In 1988, <strong style={{ color: '#0D1B3E' }}>George Varghese</strong> founded Geos Enterprises with a singular conviction — that India&apos;s growing infrastructure needed fleet partners it could truly rely on. Starting from Ahmedabad, Gujarat, he built a company rooted in discipline, compliance, and service excellence.
+                  In 1988, <strong style={{ color: '#0a0f1c' }}>George Varghese</strong> founded Geos Enterprises with a singular conviction — that India&apos;s growing infrastructure needed fleet partners it could truly rely on.
                 </p>
                 <p>
                   What began as a local transport contractor evolved into one of India&apos;s respected names in{' '}
-                  <strong style={{ color: '#0D1B3E' }}>government and corporate fleet provisioning</strong>. Over the decades, Geos Enterprises forged long-standing relationships with the giants of India&apos;s energy, mining, and infrastructure sectors.
+                  <strong style={{ color: '#0a0f1c' }}>government and corporate fleet provisioning</strong>. Over the decades, Geos Enterprises forged long-standing relationships with the giants of India&apos;s energy, mining, and infrastructure sectors.
                 </p>
                 <p>
-                  Today, the company operates a <strong style={{ color: '#0D1B3E' }}>100% commercially plated, fully verified fleet</strong> — offering everything from executive car hire to heavy-duty logistics support, and a growing public marketplace for quality used commercial vehicles.
+                  Today, the company operates a <strong style={{ color: '#0a0f1c' }}>100% commercially plated, fully verified fleet</strong> — offering everything from executive car hire to heavy-duty logistics support, and a growing public marketplace for quality used commercial vehicles.
                 </p>
               </div>
 
               {/* Trust pills */}
-              <div className="flex flex-wrap gap-3 mt-8">
+              <div className="flex flex-wrap gap-2.5 mt-8">
                 {['GST Registered', 'All India Permit', '100% Taxi Plated', 'Commercial Insurance'].map((badge) => (
                   <div
                     key={badge}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-body font-medium"
                     style={{
-                      backgroundColor: 'rgba(22,101,52,0.08)',
-                      border: '1px solid rgba(22,101,52,0.2)',
-                      color: '#166534',
+                      backgroundColor: '#f0fdf4',
+                      color: '#1a7a42',
                     }}
                   >
-                    <CheckCircle size={12} />
+                    <CheckCircle size={11} strokeWidth={1.5} />
                     {badge}
                   </div>
                 ))}
@@ -230,45 +203,44 @@ export default function AboutPage() {
 
             {/* Timeline */}
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.5, delay: 0.1, ease }}
             >
               <span className="section-label mb-8 inline-flex">MILESTONES</span>
 
               <div className="relative space-y-0">
                 {/* Vertical line */}
                 <div
-                  className="absolute left-[7px] top-2 bottom-2 w-0.5 rounded-full"
-                  style={{ backgroundColor: '#E2E8F0' }}
+                  className="absolute left-[5px] top-2 bottom-2 w-[1px] rounded-full"
+                  style={{ backgroundColor: '#e5e2dd' }}
                 />
 
                 {milestones.map((m, idx) => (
                   <motion.div
                     key={m.year}
-                    initial={{ opacity: 0, x: 16 }}
+                    initial={{ opacity: 0, x: 12 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-40px' }}
-                    transition={{ duration: 0.45, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.4, delay: idx * 0.06, ease }}
                     className="relative flex gap-5 pb-8"
                   >
-                    {/* Timeline dot */}
                     <div className="relative z-10 flex-shrink-0">
                       <div
-                        className="w-4 h-4 rounded-full mt-0.5"
+                        className="w-[11px] h-[11px] rounded-full mt-1"
                         style={{
-                          backgroundColor: '#8E1B2D',
-                          border: '3px solid white',
-                          boxShadow: '0 0 0 2px #8E1B2D',
+                          backgroundColor: '#0a0f1c',
+                          border: '2px solid #fafaf8',
+                          boxShadow: '0 0 0 1px #0a0f1c',
                         }}
                       />
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-sm mb-1.5" style={{ color: '#0D1B3E' }}>
+                      <p className="font-heading font-bold text-sm mb-1" style={{ color: '#0a0f1c' }}>
                         {m.year}
                       </p>
-                      <p className="font-body text-sm leading-relaxed" style={{ color: '#475569' }}>
+                      <p className="font-body text-sm leading-relaxed" style={{ color: '#6b7280' }}>
                         {m.event}
                       </p>
                     </div>
@@ -281,41 +253,37 @@ export default function AboutPage() {
       </section>
 
       {/* Credentials */}
-      <section className="section-py" style={{ backgroundColor: '#F5F8FF' }}>
+      <section className="section-py bg-white border-t border-black/[0.04]">
         <div className="container-wide">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease }}
             className="text-center mb-10"
           >
             <span className="section-label justify-center mb-4 inline-flex">LEGAL &amp; COMPLIANCE</span>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
             {credentials.map((c, idx) => {
               const Icon = c.icon
               return (
                 <motion.div
                   key={c.label}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                  className="bg-white rounded-2xl p-6 text-center"
-                  style={{ border: '1px solid #E2E8F0', boxShadow: '0 4px 16px rgba(13,27,62,0.06)' }}
+                  transition={{ duration: 0.4, delay: idx * 0.08, ease }}
+                  className="bg-[#fafaf8] rounded-xl p-6 text-center border border-black/[0.04]"
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-4"
-                    style={{ backgroundColor: 'rgba(142,27,45,0.08)', border: '1px solid rgba(142,27,45,0.15)' }}
-                  >
-                    <Icon size={18} style={{ color: '#8E1B2D' }} />
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-4 bg-[#f5f3f0]">
+                    <Icon size={16} style={{ color: '#6b7280' }} strokeWidth={1.5} />
                   </div>
-                  <p className="font-heading font-bold text-[11px] tracking-widest uppercase mb-2" style={{ color: '#8E1B2D' }}>
+                  <p className="font-body text-[11px] font-medium tracking-wider uppercase mb-2 text-[#9ca3af]">
                     {c.label}
                   </p>
-                  <p className="font-body text-sm" style={{ color: '#0D1B3E' }}>{c.value}</p>
+                  <p className="font-body text-sm font-medium" style={{ color: '#0a0f1c' }}>{c.value}</p>
                 </motion.div>
               )
             })}

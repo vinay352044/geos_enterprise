@@ -22,16 +22,16 @@ const selectSx = {
     fontFamily: '"Inter", sans-serif',
     fontSize: '14px',
     borderRadius: '10px',
-    backgroundColor: '#FFFFFF',
-    '& fieldset': { borderColor: '#E2E8F0', borderWidth: '1.5px' },
-    '&:hover fieldset': { borderColor: '#2563EB55' },
-    '&.Mui-focused fieldset': { borderColor: '#2563EB', borderWidth: '2px' },
+    backgroundColor: '#fafaf8',
+    '& fieldset': { borderColor: '#e5e2dd', borderWidth: '1px' },
+    '&:hover fieldset': { borderColor: '#c8956c55' },
+    '&.Mui-focused fieldset': { borderColor: '#0a0f1c', borderWidth: '1.5px' },
   },
   '& .MuiInputLabel-root': {
     fontFamily: '"Inter", sans-serif',
     fontSize: '14px',
-    color: '#64748B',
-    '&.Mui-focused': { color: '#2563EB' },
+    color: '#9ca3af',
+    '&.Mui-focused': { color: '#0a0f1c' },
   },
 }
 
@@ -41,15 +41,15 @@ export function FilterBar() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="bg-white rounded-2xl p-5 mb-8"
-      style={{ border: '1px solid #E2E8F0', boxShadow: '0 4px 20px rgba(13,27,62,0.06)' }}
+      transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+      className="bg-white rounded-xl p-5 mb-8 border border-black/[0.04]"
+      style={{ boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}
     >
       <div className="flex items-center gap-2 mb-4">
-        <SlidersHorizontal size={15} style={{ color: '#1E3A8A' }} />
-        <span className="font-heading font-bold text-[13px] uppercase tracking-widest" style={{ color: '#0D1B3E' }}>
+        <SlidersHorizontal size={14} style={{ color: '#6b7280' }} strokeWidth={1.5} />
+        <span className="font-body font-medium text-[13px]" style={{ color: '#0a0f1c' }}>
           Filter Vehicles
         </span>
       </div>
@@ -107,11 +107,10 @@ export function FilterBar() {
       <div className="flex justify-end mt-3">
         <button
           onClick={() => dispatch(resetMarketplaceFilter())}
-          className="flex items-center gap-2 font-heading font-semibold text-[12px] uppercase tracking-wider px-4 py-2 rounded-xl border transition-all duration-200 hover:bg-slate-50"
-          style={{ borderColor: '#CBD5E1', color: '#475569' }}
+          className="flex items-center gap-1.5 font-body font-medium text-[12px] px-3 py-1.5 rounded-lg border border-[#e5e2dd] text-[#6b7280] hover:bg-[#f5f3f0] transition-colors"
         >
-          <RotateCcw size={12} />
-          Reset Filters
+          <RotateCcw size={11} strokeWidth={1.5} />
+          Reset
         </button>
       </div>
     </motion.div>

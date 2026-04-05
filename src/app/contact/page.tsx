@@ -6,40 +6,39 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { TextField, CircularProgress } from '@mui/material'
 import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, CheckCircle, Send, MessageSquare } from 'lucide-react'
+import { Phone, Mail, MapPin, CheckCircle, Send, ArrowRight } from 'lucide-react'
 import { contactFormSchema, type ContactFormValues } from '@/lib/validators'
 import { submitContactApi } from '@/lib/api'
 import { companyInfo } from '@/data/companyInfo'
+
+const ease = [0.25, 1, 0.5, 1] as const
 
 const inputSx = {
   '& .MuiOutlinedInput-root': {
     fontFamily: '"Inter", sans-serif',
     fontSize: '14px',
     borderRadius: '10px',
-    backgroundColor: '#F9FAFB',
-    '& fieldset': { borderColor: '#E2E8F0', borderWidth: '1.5px' },
-    '&:hover fieldset': { borderColor: '#2563EB55' },
-    '&.Mui-focused fieldset': { borderColor: '#2563EB', borderWidth: '2px' },
+    backgroundColor: '#fafaf8',
+    '& fieldset': { borderColor: '#e5e2dd', borderWidth: '1px' },
+    '&:hover fieldset': { borderColor: '#c8956c55' },
+    '&.Mui-focused fieldset': { borderColor: '#0a0f1c', borderWidth: '1.5px' },
   },
   '& .MuiInputLabel-root': {
     fontFamily: '"Inter", sans-serif',
     fontSize: '14px',
-    color: '#64748B',
-    '&.Mui-focused': { color: '#2563EB' },
+    color: '#9ca3af',
+    '&.Mui-focused': { color: '#0a0f1c' },
   },
   '& .MuiFormHelperText-root': { fontFamily: '"Inter", sans-serif', fontSize: '12px' },
 }
 
-const contactCards = [
+const contactInfo = [
   {
     icon: Phone,
     title: 'Call Us',
     value: companyInfo.phone,
     href: `tel:${companyInfo.phone.replace(/\D/g, '')}`,
     sub: 'Available 24/7',
-    iconColor: '#3B82F6',
-    iconBg: 'rgba(59,130,246,0.1)',
-    border: 'rgba(59,130,246,0.15)',
   },
   {
     icon: Mail,
@@ -47,9 +46,6 @@ const contactCards = [
     value: companyInfo.email,
     href: `mailto:${companyInfo.email}`,
     sub: 'Reply within 24 hours',
-    iconColor: '#8B5CF6',
-    iconBg: 'rgba(139,92,246,0.1)',
-    border: 'rgba(139,92,246,0.15)',
   },
   {
     icon: MapPin,
@@ -57,9 +53,6 @@ const contactCards = [
     value: companyInfo.address.full,
     href: '#map',
     sub: 'Ahmedabad, Gujarat',
-    iconColor: '#F0A500',
-    iconBg: 'rgba(240,165,0,0.1)',
-    border: 'rgba(240,165,0,0.15)',
   },
 ]
 
@@ -96,37 +89,31 @@ export default function ContactPage() {
       <section
         className="relative overflow-hidden"
         style={{
-          background: 'linear-gradient(155deg, #040B18 0%, #0A1830 40%, #0C1F4A 70%, #060E1A 100%)',
-          paddingTop: 'clamp(100px, 12vw, 160px)',
+          background: '#0a0f1c',
+          paddingTop: 'clamp(120px, 14vw, 180px)',
           paddingBottom: 'clamp(56px, 6vw, 88px)',
         }}
       >
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: '700px', height: '700px', top: '-200px', right: '-100px',
-            background: 'radial-gradient(circle, rgba(37,99,235,0.14) 0%, transparent 65%)',
-            filter: 'blur(80px)',
-          }}
-        />
-
-        <div className="container-wide relative text-center">
+        <div className="container-wide relative">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.5, ease }}
+            className="max-w-xl"
           >
-            <span
-              className="inline-flex items-center gap-2 font-heading font-bold text-[10px] tracking-[0.2em] uppercase px-4 py-2 rounded-full mb-6"
-              style={{ backgroundColor: 'rgba(37,99,235,0.1)', color: '#60A5FA', border: '1px solid rgba(59,130,246,0.2)' }}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-[1px] bg-[#3366ff]" />
+              <span className="font-body text-[12px] font-medium tracking-[0.15em] uppercase text-[#3366ff]">
+                Get in Touch
+              </span>
+            </div>
+            <h1
+              className="font-heading font-extrabold text-white mb-4"
+              style={{ fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.03em', lineHeight: 1.08 }}
             >
-              <MessageSquare size={11} />
-              GET IN TOUCH
-            </span>
-            <h1 className="font-heading font-extrabold text-white mb-5" style={{ letterSpacing: '-0.02em' }}>
               Contact Us
             </h1>
-            <p className="font-body text-lg max-w-xl mx-auto leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="font-body text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.4)' }}>
               Get in touch with our fleet specialists for quotes, partnerships, or any inquiries. We respond within 2 hours.
             </p>
           </motion.div>
@@ -134,48 +121,33 @@ export default function ContactPage() {
       </section>
 
       {/* Contact info + form */}
-      <section className="section-py" style={{ backgroundColor: '#F5F8FF' }}>
+      <section className="section-py bg-[#fafaf8]">
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
             {/* Left — Info */}
             <div className="space-y-4">
-              {contactCards.map((item, idx) => {
+              {contactInfo.map((item, idx) => {
                 const Icon = item.icon
                 return (
                   <motion.a
                     key={item.title}
                     href={item.href}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.45, delay: idx * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex items-start gap-4 p-5 rounded-2xl bg-white group transition-all duration-300"
-                    style={{
-                      border: '1px solid #E2E8F0',
-                      boxShadow: '0 4px 16px rgba(13,27,62,0.06)',
-                      display: 'flex',
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = item.border
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(13,27,62,0.1)'
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#E2E8F0'
-                      ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(13,27,62,0.06)'
-                    }}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: idx * 0.08, ease }}
+                    className="flex items-start gap-4 p-5 rounded-xl bg-white group transition-all duration-300 border border-black/[0.04] hover:border-black/[0.08] hover:shadow-[0_8px_24px_rgba(0,0,0,0.05)]"
+                    style={{ display: 'flex' }}
                   >
-                    <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: item.iconBg, border: `1px solid ${item.border}` }}
-                    >
-                      <Icon size={18} style={{ color: item.iconColor }} strokeWidth={1.8} />
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#f5f3f0]">
+                      <Icon size={15} style={{ color: '#6b7280' }} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-sm mb-1" style={{ color: '#0D1B3E' }}>{item.title}</p>
-                      <p className="font-body text-sm group-hover:underline transition-all" style={{ color: '#334155' }}>
+                      <p className="font-body font-medium text-sm mb-0.5" style={{ color: '#0a0f1c' }}>{item.title}</p>
+                      <p className="font-body text-sm group-hover:text-[#0a0f1c] transition-colors" style={{ color: '#6b7280' }}>
                         {item.value}
                       </p>
-                      <p className="font-body text-xs mt-0.5" style={{ color: '#94A3B8' }}>{item.sub}</p>
+                      <p className="font-body text-[11px] text-[#9ca3af] mt-0.5">{item.sub}</p>
                     </div>
                   </motion.a>
                 )
@@ -183,12 +155,12 @@ export default function ContactPage() {
 
               {/* Map */}
               <motion.div
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4, delay: 0.3, ease }}
                 id="map"
-                className="rounded-2xl overflow-hidden bg-gray-200"
-                style={{ height: '200px', border: '1px solid #E2E8F0' }}
+                className="rounded-xl overflow-hidden bg-[#f5f3f0]"
+                style={{ height: '200px', border: '1px solid rgba(0,0,0,0.04)' }}
               >
                 <iframe
                   src={companyInfo.mapEmbedUrl}
@@ -206,30 +178,26 @@ export default function ContactPage() {
             {/* Right — Form */}
             <div className="lg:col-span-2">
               <motion.div
-                initial={{ opacity: 0, x: 16 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                className="bg-white rounded-2xl p-7 md:p-9"
-                style={{ border: '1px solid #E2E8F0', boxShadow: '0 4px 24px rgba(13,27,62,0.07)' }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease }}
+                className="bg-white rounded-2xl p-7 md:p-9 border border-black/[0.04]"
+                style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.04)' }}
               >
                 {submitted ? (
                   <div className="text-center py-12">
-                    <div
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                      style={{ backgroundColor: 'rgba(22,101,52,0.08)', border: '1px solid rgba(22,101,52,0.2)' }}
-                    >
-                      <CheckCircle size={32} style={{ color: '#166534' }} />
+                    <div className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-6 bg-[#f0fdf4]">
+                      <CheckCircle size={28} style={{ color: '#1a7a42' }} strokeWidth={1.5} />
                     </div>
-                    <h2 className="font-heading font-bold text-2xl mb-3" style={{ color: '#0D1B3E' }}>
-                      Message Sent!
+                    <h2 className="font-heading font-bold text-2xl mb-3" style={{ color: '#0a0f1c' }}>
+                      Message Sent
                     </h2>
-                    <p className="font-body mb-8" style={{ color: '#475569' }}>
+                    <p className="font-body text-sm mb-8" style={{ color: '#6b7280' }}>
                       We&apos;ll get back to you within 24 hours.
                     </p>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="font-heading font-bold text-[13px] uppercase tracking-wider px-8 py-3 rounded-xl border-2 transition-all hover:bg-slate-50"
-                      style={{ borderColor: '#E2E8F0', color: '#0D1B3E' }}
+                      className="font-heading font-semibold text-sm text-[#0a0f1c] px-7 py-3 rounded-lg border border-[#e5e2dd] hover:bg-[#f5f3f0] transition-colors"
                     >
                       Send Another Message
                     </button>
@@ -237,10 +205,10 @@ export default function ContactPage() {
                 ) : (
                   <>
                     <div className="mb-7">
-                      <h2 className="font-heading font-bold text-2xl mb-1" style={{ color: '#0D1B3E' }}>
-                        Send Us a Message
+                      <h2 className="font-heading font-bold text-xl mb-1" style={{ color: '#0a0f1c' }}>
+                        Send us a message
                       </h2>
-                      <p className="font-body text-sm" style={{ color: '#64748B' }}>
+                      <p className="font-body text-sm" style={{ color: '#9ca3af' }}>
                         Our fleet specialists will respond within 24 hours.
                       </p>
                     </div>
@@ -251,59 +219,28 @@ export default function ContactPage() {
                           name="name"
                           control={control}
                           render={({ field }) => (
-                            <TextField
-                              {...field}
-                              label="Your Name *"
-                              fullWidth
-                              error={!!errors.name}
-                              helperText={errors.name?.message}
-                              sx={inputSx}
-                            />
+                            <TextField {...field} label="Your Name *" fullWidth error={!!errors.name} helperText={errors.name?.message} sx={inputSx} />
                           )}
                         />
                         <Controller
                           name="email"
                           control={control}
                           render={({ field }) => (
-                            <TextField
-                              {...field}
-                              label="Email Address *"
-                              type="email"
-                              fullWidth
-                              error={!!errors.email}
-                              helperText={errors.email?.message}
-                              sx={inputSx}
-                            />
+                            <TextField {...field} label="Email Address *" type="email" fullWidth error={!!errors.email} helperText={errors.email?.message} sx={inputSx} />
                           )}
                         />
                         <Controller
                           name="phone"
                           control={control}
                           render={({ field }) => (
-                            <TextField
-                              {...field}
-                              label="Mobile Number *"
-                              fullWidth
-                              placeholder="10-digit number"
-                              inputProps={{ maxLength: 10 }}
-                              error={!!errors.phone}
-                              helperText={errors.phone?.message}
-                              sx={inputSx}
-                            />
+                            <TextField {...field} label="Mobile Number *" fullWidth placeholder="10-digit number" inputProps={{ maxLength: 10 }} error={!!errors.phone} helperText={errors.phone?.message} sx={inputSx} />
                           )}
                         />
                         <Controller
                           name="subject"
                           control={control}
                           render={({ field }) => (
-                            <TextField
-                              {...field}
-                              label="Subject *"
-                              fullWidth
-                              error={!!errors.subject}
-                              helperText={errors.subject?.message}
-                              sx={inputSx}
-                            />
+                            <TextField {...field} label="Subject *" fullWidth error={!!errors.subject} helperText={errors.subject?.message} sx={inputSx} />
                           )}
                         />
                         <div className="md:col-span-2">
@@ -311,27 +248,15 @@ export default function ContactPage() {
                             name="message"
                             control={control}
                             render={({ field }) => (
-                              <TextField
-                                {...field}
-                                label="Message *"
-                                multiline
-                                rows={5}
-                                fullWidth
-                                error={!!errors.message}
-                                helperText={errors.message?.message}
-                                sx={inputSx}
-                              />
+                              <TextField {...field} label="Message *" multiline rows={5} fullWidth error={!!errors.message} helperText={errors.message?.message} sx={inputSx} />
                             )}
                           />
                         </div>
                       </div>
 
                       {mutation.isError && (
-                        <div
-                          className="mt-4 p-4 rounded-xl"
-                          style={{ backgroundColor: 'rgba(153,27,27,0.08)', border: '1px solid rgba(153,27,27,0.2)' }}
-                        >
-                          <p className="font-body text-sm" style={{ color: '#991B1B' }}>
+                        <div className="mt-4 p-4 rounded-xl" style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}>
+                          <p className="font-body text-sm" style={{ color: '#c23a22' }}>
                             Failed to send. Please email us at {companyInfo.email}
                           </p>
                         </div>
@@ -340,12 +265,13 @@ export default function ContactPage() {
                       <button
                         type="submit"
                         disabled={mutation.isPending || !isValid}
-                        className="w-full mt-6 flex items-center justify-center gap-2.5 font-heading font-bold text-[13px] uppercase tracking-wider text-white py-4 rounded-xl transition-all duration-300 disabled:opacity-60"
+                        className="w-full mt-6 flex items-center justify-center gap-2.5 font-heading font-semibold text-[14px] text-white py-4 rounded-xl transition-all duration-300 disabled:opacity-50"
                         style={{
-                          background: 'linear-gradient(135deg, #0D1B3E 0%, #1E3A8A 100%)',
-                          boxShadow: '0 4px 20px rgba(13,27,62,0.3)',
+                          background: isValid ? '#0a0f1c' : '#9ca3af',
                           minHeight: '52px',
                         }}
+                        onMouseEnter={(e) => { if (isValid) e.currentTarget.style.background = '#1a2332' }}
+                        onMouseLeave={(e) => { if (isValid) e.currentTarget.style.background = '#0a0f1c' }}
                       >
                         {mutation.isPending ? (
                           <>
@@ -355,7 +281,7 @@ export default function ContactPage() {
                         ) : (
                           <>
                             Send Message
-                            <Send size={15} />
+                            <ArrowRight size={15} strokeWidth={2} />
                           </>
                         )}
                       </button>

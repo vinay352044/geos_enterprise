@@ -1,280 +1,287 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Phone, ShieldCheck, Star, Building2 } from 'lucide-react'
+import { ArrowRight, Phone } from 'lucide-react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { companyInfo } from '@/data/companyInfo'
+import { useCountUp } from '@/hooks/useCountUp'
 
-const trustItems = [
-  { icon: ShieldCheck, label: '100% Taxi Plated', sub: 'Verified fleet' },
-  { icon: Building2, label: '35+ Years', sub: 'Established 1988' },
-  { icon: Star, label: '25+ Clients', sub: 'PSUs & Corporates' },
-]
+// Dynamically import three.js-backed shader so it doesn't block initial
+// hydration. ssr:false because WebGL is a browser-only API.
+const AnimatedShaderBackground = dynamic(
+  () =>
+    import('@/components/ui/animated-shader-background').then(
+      (m) => m.AnimatedShaderBackground,
+    ),
+  { ssr: false },
+)
 
+/* ─── Animation Variants ─── */
+const ease = [0.25, 0.4, 0.25, 1] as const
+
+const blurFade = {
+  hidden: { opacity: 0, y: 24, filter: 'blur(12px)' },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.8, delay, ease },
+  }),
+}
+
+const softFade = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, delay, ease },
+  }),
+}
+
+/* ─── Animated Stat Counter ─── */
+function AnimatedStat({
+  value,
+  suffix,
+  label,
+  highlight,
+  delay,
+}: {
+  value: number
+  suffix: string
+  label: string
+  highlight?: boolean
+  delay: number
+}) {
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setStarted(true), delay * 1000)
+    return () => clearTimeout(timer)
+  }, [delay])
+
+  const count = useCountUp(value, 2200, started)
+
+  return (
+    <motion.div variants={blurFade} initial="hidden" animate="visible" custom={delay}>
+      <div
+        className="font-heading font-extrabold mb-1"
+        style={{
+          fontSize: 'clamp(32px, 3.5vw, 52px)',
+          lineHeight: 1,
+          letterSpacing: '-0.03em',
+          color: highlight ? '#c8956c' : '#ffffff',
+        }}
+      >
+        {count}
+        {suffix}
+      </div>
+      <div
+        className="font-body text-[11px] font-medium tracking-[0.1em] uppercase"
+        style={{ color: 'rgba(255,255,255,0.3)' }}
+      >
+        {label}
+      </div>
+    </motion.div>
+  )
+}
+
+/* ─── Hero Section ─── */
 export function HeroSection() {
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      className="relative min-h-[100svh] flex items-center overflow-hidden"
+      style={{ backgroundColor: '#06090f' }}
       aria-label="Hero section"
-      style={{
-        background: 'linear-gradient(155deg, #040B18 0%, #0A1830 30%, #0C1F4A 55%, #0D1635 80%, #030A14 100%)',
-      }}
     >
-      {/* Background layers */}
-      {/* Large blue orb — top left */}
+      {/* Animated aurora shader — fills the entire section */}
+      <AnimatedShaderBackground />
+
+      {/* Light uniform tint for text legibility — no nested wrappers */}
       <div
-        className="absolute pointer-events-none"
-        style={{
-          width: '900px',
-          height: '900px',
-          top: '-300px',
-          left: '-300px',
-          background: 'radial-gradient(circle, rgba(37,99,235,0.22) 0%, rgba(29,78,216,0.08) 45%, transparent 70%)',
-          filter: 'blur(90px)',
-        }}
-      />
-      {/* Purple accent orb — bottom right */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: '800px',
-          height: '800px',
-          bottom: '-200px',
-          right: '-200px',
-          background: 'radial-gradient(circle, rgba(88,28,135,0.2) 0%, rgba(67,20,140,0.08) 45%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
-      {/* Crimson accent — bottom left */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: '500px',
-          height: '500px',
-          bottom: '10%',
-          left: '5%',
-          background: 'radial-gradient(circle, rgba(142,27,45,0.18) 0%, transparent 65%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      {/* Animated breathing orb — center */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          width: '600px',
-          height: '600px',
-          top: '15%',
-          left: '30%',
-          background: 'radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 65%)',
-          filter: 'blur(80px)',
-        }}
-        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.9, 0.5] }}
-        transition={{ repeat: Infinity, duration: 9, ease: 'easeInOut' }}
+        className="absolute inset-0 pointer-events-none"
+        style={{ backgroundColor: 'rgba(6,9,15,0.32)' }}
       />
 
-      {/* Fine noise grain */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundSize: '256px 256px',
-        }}
-      />
+      {/* ─── Content ─── */}
+      <div className="relative z-10 w-full container-wide py-32 md:py-40 lg:py-48">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Left — Headline area */}
+          <div className="lg:col-span-8">
+            {/* Eyebrow */}
+            <motion.div
+              variants={blurFade}
+              initial="hidden"
+              animate="visible"
+              custom={0.15}
+              className="flex items-center gap-3 mb-8"
+            >
+              <div className="w-8 h-[1.5px] bg-[#c8956c]" />
+              <span className="font-body text-[11px] font-semibold tracking-[0.18em] uppercase text-[#c8956c]">
+                Est. 1988 &middot; Commercial Fleet Specialists
+              </span>
+            </motion.div>
 
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)`,
-          backgroundSize: '80px 80px',
-        }}
-      />
-
-      {/* Horizontal glow line */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: '42%',
-          left: 0,
-          right: 0,
-          height: '1px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(59,130,246,0.12) 25%, rgba(59,130,246,0.25) 50%, rgba(59,130,246,0.12) 75%, transparent 100%)',
-        }}
-      />
-
-      {/* === Main Content === */}
-      <div className="relative z-10 w-full container-wide flex flex-col items-center text-center text-white pt-28 pb-20 md:pt-36 md:pb-28">
-
-        {/* Trust badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-flex items-center gap-2.5 rounded-full px-5 py-2 mb-8 text-xs font-heading font-bold uppercase tracking-widest"
-          style={{
-            background: 'linear-gradient(135deg, rgba(240,165,0,0.1) 0%, rgba(240,165,0,0.05) 100%)',
-            border: '1px solid rgba(240,165,0,0.28)',
-            color: '#F0A500',
-            backdropFilter: 'blur(16px)',
-            boxShadow: '0 0 24px rgba(240,165,0,0.06), inset 0 1px 0 rgba(255,255,255,0.05)',
-          }}
-        >
-          <span
-            className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ backgroundColor: '#F0A500', boxShadow: '0 0 8px #F0A500' }}
-          />
-          India&apos;s Trusted Commercial Fleet Partner
-        </motion.div>
-
-        {/* Main headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="font-heading font-extrabold mb-6 mx-auto"
-          style={{ maxWidth: '1050px', lineHeight: 1.06, fontSize: 'clamp(36px, 4.2vw, 72px)', letterSpacing: '-0.025em' }}
-        >
-          <span className="text-white">Fleet Solutions for</span>
-          <br />
-          <span
-            style={{
-              background: 'linear-gradient(95deg, #60a5fa 0%, #93c5fd 45%, #bfdbfe 75%, #60a5fa 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              backgroundSize: '200% auto',
-            }}
-          >
-            India&apos;s Infrastructure Giants.
-          </span>
-        </motion.h1>
-
-        {/* Sub-copy */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.42, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="font-body text-lg md:text-xl mx-auto mb-10 leading-relaxed"
-          style={{ color: 'rgba(191,219,254,0.6)', maxWidth: '640px', letterSpacing: '0.01em' }}
-        >
-          Specialized vehicle provisioning for PSUs, government bodies &amp; corporations.
-          Every vehicle 100% Commercially Plated — no exceptions.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.54, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
-        >
-          <Link
-            href="/#call-basis-form"
-            className="group inline-flex items-center gap-2.5 font-heading font-bold text-[13px] uppercase tracking-wider text-white px-8 py-4 rounded-xl min-h-[52px] transition-all duration-300"
-            style={{
-              background: 'linear-gradient(135deg, #C21E35 0%, #7A1525 100%)',
-              boxShadow: '0 0 0 1px rgba(220,38,57,0.25), 0 6px 28px rgba(142,27,45,0.4)',
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = '0 0 0 1px rgba(220,38,57,0.45), 0 10px 40px rgba(142,27,45,0.6)'
-              el.style.transform = 'translateY(-2px)'
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement
-              el.style.boxShadow = '0 0 0 1px rgba(220,38,57,0.25), 0 6px 28px rgba(142,27,45,0.4)'
-              el.style.transform = 'translateY(0)'
-            }}
-          >
-            Request a Vehicle
-            <ArrowRight size={16} className="transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-
-          <a
-            href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
-            className="inline-flex items-center gap-2.5 font-heading font-bold text-[13px] uppercase tracking-wider px-8 py-4 rounded-xl min-h-[52px] transition-all duration-300"
-            style={{
-              color: '#bfdbfe',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(147,197,253,0.2)',
-              backdropFilter: 'blur(12px)',
-            }}
-            onMouseEnter={(e) => {
-              const el = e.currentTarget as HTMLElement
-              el.style.background = 'rgba(255,255,255,0.09)'
-              el.style.borderColor = 'rgba(147,197,253,0.38)'
-              el.style.transform = 'translateY(-2px)'
-            }}
-            onMouseLeave={(e) => {
-              const el = e.currentTarget as HTMLElement
-              el.style.background = 'rgba(255,255,255,0.05)'
-              el.style.borderColor = 'rgba(147,197,253,0.2)'
-              el.style.transform = 'translateY(0)'
-            }}
-          >
-            <Phone size={15} />
-            Call Now
-          </a>
-        </motion.div>
-
-        {/* Trust items */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.68, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="flex flex-col sm:flex-row items-center gap-4 sm:gap-0 sm:divide-x sm:divide-white/10"
-        >
-          {trustItems.map((item) => {
-            const Icon = item.icon
-            return (
-              <div
-                key={item.label}
-                className="flex items-center gap-3 sm:px-8 first:sm:pl-0 last:sm:pr-0"
+            {/* Headline — line-by-line blur reveal */}
+            <h1
+              className="font-heading font-extrabold text-white mb-8"
+              style={{
+                fontSize: 'clamp(42px, 5.8vw, 80px)',
+                lineHeight: 1.02,
+                letterSpacing: '-0.04em',
+                maxWidth: '740px',
+              }}
+            >
+              <motion.span
+                className="block"
+                variants={blurFade}
+                initial="hidden"
+                animate="visible"
+                custom={0.25}
               >
-                <div
-                  className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
+                Fleet Solutions
+              </motion.span>
+              <motion.span
+                className="block"
+                variants={blurFade}
+                initial="hidden"
+                animate="visible"
+                custom={0.38}
+              >
+                for India&apos;s{' '}
+                <span
+                  className="italic font-bold"
+                  style={{ color: '#c8956c' }}
                 >
-                  <Icon size={16} style={{ color: '#60a5fa' }} />
+                  Biggest
+                </span>
+              </motion.span>
+              <motion.span
+                className="block"
+                variants={blurFade}
+                initial="hidden"
+                animate="visible"
+                custom={0.5}
+              >
+                Infrastructure.
+              </motion.span>
+            </h1>
+
+            {/* Sub-copy */}
+            <motion.p
+              variants={softFade}
+              initial="hidden"
+              animate="visible"
+              custom={0.62}
+              className="font-body text-base md:text-lg mb-10"
+              style={{
+                color: 'rgba(255,255,255,0.55)',
+                maxWidth: '480px',
+                lineHeight: 1.75,
+              }}
+            >
+              500+ commercially plated vehicles serving PSUs, government bodies &amp;
+              corporations across India. Zero exceptions on compliance.
+            </motion.p>
+
+            {/* CTA buttons */}
+            <motion.div
+              variants={softFade}
+              initial="hidden"
+              animate="visible"
+              custom={0.74}
+              className="flex flex-col sm:flex-row gap-3"
+            >
+              <Link
+                href="/#call-basis-form"
+                className="group inline-flex items-center gap-2.5 font-heading font-semibold text-[14px] text-[#0a0f1c] bg-white px-8 py-4 rounded-xl transition-all duration-500 hover:shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:bg-[#f8f8f6]"
+              >
+                Request a Vehicle
+                <ArrowRight
+                  size={15}
+                  strokeWidth={2}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+
+              <a
+                href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
+                className="group inline-flex items-center gap-2.5 font-body font-medium text-[14px] px-8 py-4 rounded-xl border border-white/[0.12] text-white/60 transition-all duration-500 hover:border-white/[0.25] hover:text-white hover:bg-white/[0.04]"
+              >
+                <Phone
+                  size={14}
+                  strokeWidth={1.5}
+                  className="transition-transform duration-300 group-hover:rotate-12"
+                />
+                {companyInfo.phone}
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Right — Animated stats */}
+          <div className="lg:col-span-4">
+            <div className="lg:border-l lg:border-white/[0.08] lg:pl-12 flex flex-row lg:flex-col gap-8 lg:gap-0">
+              {[
+                { value: 500, suffix: '+', label: 'Fleet Vehicles', delay: 0.8 },
+                { value: 35, suffix: '+', label: 'Years Active', delay: 0.94 },
+                {
+                  value: 100,
+                  suffix: '%',
+                  label: 'Taxi Plated',
+                  highlight: true,
+                  delay: 1.08,
+                },
+              ].map((stat, idx) => (
+                <div
+                  key={stat.label}
+                  className={`flex-1 lg:flex-none ${
+                    idx > 0
+                      ? 'lg:mt-10 lg:pt-10 lg:border-t lg:border-white/[0.08]'
+                      : ''
+                  }`}
+                >
+                  <AnimatedStat {...stat} />
                 </div>
-                <div className="text-left">
-                  <p className="font-heading font-bold text-white text-sm leading-tight">{item.label}</p>
-                  <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{item.sub}</p>
-                </div>
-              </div>
-            )
-          })}
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Trust bar — staggered entrance */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.3, duration: 0.6, ease: [0.25, 0.4, 0.25, 1] }}
+          className="mt-20 pt-8 border-t border-white/[0.06]"
+        >
+          <div className="flex flex-wrap items-center gap-x-10 gap-y-3">
+            {['ONGC', 'Vedanta', 'BPCL', 'Adani Group', 'GVK EMRI'].map(
+              (name, idx) => (
+                <motion.span
+                  key={name}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.4 + idx * 0.08, duration: 0.4 }}
+                  className="font-heading font-semibold text-[11px] tracking-[0.12em] uppercase"
+                  style={{ color: 'rgba(255,255,255,0.25)' }}
+                >
+                  {name}
+                </motion.span>
+              ),
+            )}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.8, duration: 0.4 }}
+              className="font-body text-[11px]"
+              style={{ color: 'rgba(255,255,255,0.15)' }}
+            >
+              &amp; 20+ more
+            </motion.span>
+          </div>
         </motion.div>
       </div>
-
-      {/* Scroll indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="font-body text-[10px] uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.25)' }}>
-          Scroll
-        </span>
-        <div
-          className="w-5 h-8 border rounded-full flex justify-center pt-1.5"
-          style={{ borderColor: 'rgba(96,165,250,0.25)' }}
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-            className="w-1 h-1 rounded-full"
-            style={{ backgroundColor: 'rgba(96,165,250,0.6)' }}
-          />
-        </div>
-      </motion.div>
-
-      {/* Bottom fade to seamlessly connect to next section */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-40 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(4,11,24,0.8) 100%)' }}
-      />
     </section>
   )
 }

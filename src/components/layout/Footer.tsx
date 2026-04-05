@@ -1,18 +1,10 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, Shield, CheckCircle, FileText, ArrowUpRight } from 'lucide-react'
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { companyInfo } from '@/data/companyInfo'
 import { NAV_LINKS, VEHICLE_CATEGORIES } from '@/lib/constants'
-
-const complianceBadges = [
-  { icon: CheckCircle, text: '100% Taxi Plated Fleet', color: '#4ADE80' },
-  { icon: Shield, text: 'GST Registered', color: '#60A5FA' },
-  { icon: FileText, text: 'All India Tourist Permit', color: '#FBBF24' },
-  { icon: CheckCircle, text: 'Commercial Insurance', color: '#4ADE80' },
-]
 
 export function Footer() {
   const pathname = usePathname()
@@ -21,80 +13,51 @@ export function Footer() {
   if (pathname.startsWith('/admin')) return null
 
   return (
-    <footer
-      style={{
-        background: 'linear-gradient(180deg, #06101E 0%, #040B16 100%)',
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-      }}
-    >
-      {/* Compliance strip */}
-      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(0,0,0,0.2)' }}>
-        <div className="container-wide py-3">
-          <div className="flex flex-wrap gap-x-8 gap-y-2 justify-center items-center">
-            {complianceBadges.map((badge) => {
-              const Icon = badge.icon
-              return (
-                <div
-                  key={badge.text}
-                  className="flex items-center gap-2 text-xs font-heading font-semibold tracking-wide"
-                  style={{ color: badge.color }}
-                >
-                  <Icon size={13} />
-                  <span>{badge.text}</span>
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-
+    <footer className="bg-[#0a0f1c]">
       {/* Main footer body */}
-      <div className="container-wide py-14 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
-
-          {/* Brand column */}
-          <div className="lg:col-span-1">
-            <div className="mb-5">
-              <h3 className="font-heading font-bold text-white text-lg mb-1">GEOS Enterprises</h3>
-              <div className="h-0.5 w-8 rounded-full" style={{ backgroundColor: '#8E1B2D' }} />
-            </div>
-            <p className="font-body text-sm leading-relaxed mb-6" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Specialized vehicle provisioning for Government &amp; Corporate sectors. 100% Commercially Plated Fleet serving India&apos;s critical infrastructure since 1988.
+      <div className="container-wide pt-16 pb-12 md:pt-20 md:pb-14">
+        {/* Top section — brand + CTA */}
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 pb-10 border-b border-white/[0.06]">
+          <div>
+            <h3 className="font-heading font-bold text-white text-xl mb-2 tracking-tight">
+              GEOS Enterprises
+            </h3>
+            <p className="font-body text-sm leading-relaxed max-w-md" style={{ color: 'rgba(255,255,255,0.35)' }}>
+              Specialized vehicle provisioning for Government &amp; Corporate sectors.
+              100% Commercially Plated Fleet since 1988.
             </p>
+          </div>
+          <Link
+            href="/#call-basis-form"
+            className="inline-flex items-center gap-2 font-heading font-semibold text-[13px] text-[#0a0f1c] bg-white px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#f5f3f0] flex-shrink-0"
+          >
+            Book a Vehicle
+            <ArrowUpRight size={14} strokeWidth={2} />
+          </Link>
+        </div>
 
-            <div className="space-y-3">
-              <a
-                href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
-                className="flex items-center gap-3 group transition-colors"
-              >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
-                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
-                  <Phone size={13} style={{ color: '#60A5FA' }} />
-                </div>
-                <span className="font-body text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  <span className="group-hover:text-white transition-colors">{companyInfo.phone}</span>
+        {/* Grid columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
+
+          {/* Contact */}
+          <div>
+            <h4 className="font-body font-medium text-white text-[13px] mb-5">Contact</h4>
+            <div className="space-y-3.5">
+              <a href={`tel:${companyInfo.phone.replace(/\D/g, '')}`} className="flex items-center gap-3 group">
+                <Phone size={13} style={{ color: 'rgba(255,255,255,0.25)' }} strokeWidth={1.5} />
+                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  {companyInfo.phone}
                 </span>
               </a>
-
-              <a
-                href={`mailto:${companyInfo.email}`}
-                className="flex items-center gap-3 group transition-colors"
-              >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
-                  <Mail size={13} style={{ color: '#60A5FA' }} />
-                </div>
-                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <a href={`mailto:${companyInfo.email}`} className="flex items-center gap-3 group">
+                <Mail size={13} style={{ color: 'rgba(255,255,255,0.25)' }} strokeWidth={1.5} />
+                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.45)' }}>
                   {companyInfo.email}
                 </span>
               </a>
-
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                  style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}>
-                  <MapPin size={13} style={{ color: '#60A5FA' }} />
-                </div>
-                <span className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                <MapPin size={13} style={{ color: 'rgba(255,255,255,0.25)', marginTop: '3px' }} strokeWidth={1.5} />
+                <span className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   {companyInfo.address.full}
                 </span>
               </div>
@@ -103,101 +66,83 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
-              Quick Links
-            </h4>
-            <ul className="space-y-3">
+            <h4 className="font-body font-medium text-white text-[13px] mb-5">Quick Links</h4>
+            <ul className="space-y-2.5">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="flex items-center gap-1.5 text-sm font-body group transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    className="font-body text-sm hover:text-white transition-colors"
+                    style={{ color: 'rgba(255,255,255,0.4)' }}
                   >
-                    <span className="w-1 h-1 rounded-full bg-blue-500/40 group-hover:bg-blue-400 transition-colors flex-shrink-0" />
-                    <span className="group-hover:text-white transition-colors">{link.label}</span>
+                    {link.label}
                   </Link>
                 </li>
               ))}
               <li>
                 <Link
                   href="/privacy-policy"
-                  className="flex items-center gap-1.5 text-sm font-body group transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                  className="font-body text-sm hover:text-white transition-colors"
+                  style={{ color: 'rgba(255,255,255,0.4)' }}
                 >
-                  <span className="w-1 h-1 rounded-full bg-blue-500/40 group-hover:bg-blue-400 transition-colors flex-shrink-0" />
-                  <span className="group-hover:text-white transition-colors">Privacy Policy</span>
+                  Privacy Policy
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Fleet Categories */}
+          {/* Fleet */}
           <div>
-            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
-              Fleet Categories
-            </h4>
-            <ul className="space-y-3">
+            <h4 className="font-body font-medium text-white text-[13px] mb-5">Fleet</h4>
+            <ul className="space-y-2.5">
               {VEHICLE_CATEGORIES.filter((c) => c !== 'All').map((cat) => (
                 <li key={cat}>
                   <Link
                     href={`/fleet?category=${encodeURIComponent(cat)}`}
-                    className="flex items-center gap-1.5 text-sm font-body group transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.45)' }}
+                    className="font-body text-sm hover:text-white transition-colors"
+                    style={{ color: 'rgba(255,255,255,0.4)' }}
                   >
-                    <span className="w-1 h-1 rounded-full bg-amber-500/40 group-hover:bg-amber-400 transition-colors flex-shrink-0" />
-                    <span className="group-hover:text-white transition-colors">{cat}</span>
+                    {cat}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Legal & CTA */}
+          {/* Legal */}
           <div>
-            <h4 className="font-heading font-bold text-white text-sm uppercase tracking-widest mb-5">
-              Legal &amp; Compliance
-            </h4>
-            <div className="space-y-3 text-sm font-body mb-8">
+            <h4 className="font-body font-medium text-white text-[13px] mb-5">Legal</h4>
+            <div className="space-y-3 text-sm font-body">
               {[
                 { label: 'GST', value: companyInfo.gst },
                 { label: 'CIN', value: companyInfo.cin },
                 { label: 'Est.', value: companyInfo.establishedYear },
               ].map((item) => (
                 <div key={item.label}>
-                  <span className="font-heading font-semibold text-xs uppercase tracking-wide" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  <span className="font-body text-[11px] font-medium uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.2)' }}>
                     {item.label}
                   </span>
-                  <p style={{ color: 'rgba(255,255,255,0.55)' }}>{item.value}</p>
+                  <p style={{ color: 'rgba(255,255,255,0.45)' }}>{item.value}</p>
                 </div>
               ))}
             </div>
-
-            {/* Book CTA */}
-            <Link
-              href="/#call-basis-form"
-              className="inline-flex items-center gap-2 font-heading font-bold text-xs uppercase tracking-wider text-white px-5 py-3 rounded-xl transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, #C21E35 0%, #7A1525 100%)',
-                boxShadow: '0 4px 16px rgba(142,27,45,0.35)',
-              }}
-            >
-              Book a Vehicle
-              <ArrowUpRight size={13} />
-            </Link>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <div className="container-wide py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-            © {currentYear} GEOS Enterprises. All rights reserved.
-          </p>
+      {/* Bottom bar — minimal */}
+      <div className="border-t border-white/[0.04]">
+        <div className="container-wide py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-            Corporate vehicle rental India · PSU fleet logistics
+            &copy; {currentYear} GEOS Enterprises. All rights reserved.
           </p>
+          <div className="flex items-center gap-6">
+            {['100% Taxi Plated', 'GST Registered', 'All India Permit'].map((badge) => (
+              <span key={badge} className="font-body text-[10px] font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.15)' }}>
+                {badge}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </footer>

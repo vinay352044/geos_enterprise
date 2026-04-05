@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { TextField, MenuItem, CircularProgress, InputAdornment } from '@mui/material'
 import { motion } from 'framer-motion'
-import { Phone, CheckCircle, Send, Calendar, MapPin, Car, Clock } from 'lucide-react'
+import { Phone, CheckCircle, Send, Calendar, MapPin, Car, Clock, ArrowRight } from 'lucide-react'
 import { leadFormSchema, type LeadFormData } from '@/lib/validators'
 import { submitLeadApi } from '@/lib/api'
 import { useAppSelector } from '@/store'
@@ -14,6 +14,7 @@ import { VEHICLE_CATEGORIES } from '@/lib/constants'
 import { useInView } from '@/hooks/useInView'
 
 const VEHICLE_OPTIONS = VEHICLE_CATEGORIES.filter((c) => c !== 'All')
+const ease = [0.25, 1, 0.5, 1] as const
 
 export function CallBasisForm() {
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null)
@@ -75,16 +76,16 @@ export function CallBasisForm() {
       fontFamily: '"Inter", sans-serif',
       fontSize: '14px',
       borderRadius: '10px',
-      backgroundColor: 'rgba(248,250,255,0.8)',
-      '& fieldset': { borderColor: '#E2E8F0', borderWidth: '1.5px' },
-      '&:hover fieldset': { borderColor: '#2563EB55' },
-      '&.Mui-focused fieldset': { borderColor: '#2563EB', borderWidth: '2px' },
+      backgroundColor: '#fafaf8',
+      '& fieldset': { borderColor: '#e5e2dd', borderWidth: '1px' },
+      '&:hover fieldset': { borderColor: '#c8956c55' },
+      '&.Mui-focused fieldset': { borderColor: '#0a0f1c', borderWidth: '1.5px' },
     },
     '& .MuiInputLabel-root': {
       fontFamily: '"Inter", sans-serif',
       fontSize: '14px',
-      color: '#64748B',
-      '&.Mui-focused': { color: '#2563EB' },
+      color: '#9ca3af',
+      '&.Mui-focused': { color: '#0a0f1c' },
     },
     '& .MuiFormHelperText-root': {
       fontFamily: '"Inter", sans-serif',
@@ -95,31 +96,30 @@ export function CallBasisForm() {
   // Success state
   if (submitSuccess) {
     return (
-      <section id="call-basis-form" className="section-py" style={{ background: 'linear-gradient(180deg, #0D1B3E 0%, #060E1E 100%)' }}>
-        <div className="container-wide max-w-xl mx-auto text-center">
+      <section id="call-basis-form" className="section-py" style={{ background: '#fafaf8' }}>
+        <div className="container-wide max-w-lg mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="bg-white rounded-2xl p-12"
-            style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.4)' }}
+            transition={{ duration: 0.4, ease }}
+            className="bg-white rounded-2xl p-12 border border-black/[0.04]"
+            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.06)' }}
           >
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-              style={{ backgroundColor: 'rgba(22,101,52,0.1)', border: '1px solid rgba(22,101,52,0.2)' }}
+              className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-6"
+              style={{ backgroundColor: '#f0fdf4' }}
             >
-              <CheckCircle size={32} style={{ color: '#166534' }} />
+              <CheckCircle size={28} style={{ color: '#1a7a42' }} strokeWidth={1.5} />
             </div>
-            <h2 className="font-heading font-bold text-2xl mb-3" style={{ color: '#0D1B3E' }}>
-              Booking Received!
+            <h2 className="font-heading font-bold text-2xl mb-3" style={{ color: '#0a0f1c' }}>
+              Booking Received
             </h2>
-            <p className="font-body text-base mb-8 leading-relaxed" style={{ color: '#475569' }}>
+            <p className="font-body text-sm mb-8 leading-relaxed" style={{ color: '#6b7280' }}>
               {submitSuccess}
             </p>
             <button
               onClick={() => setSubmitSuccess(null)}
-              className="font-heading font-bold text-sm uppercase tracking-wider text-white px-8 py-3 rounded-xl transition-all"
-              style={{ background: 'linear-gradient(135deg, #0D1B3E 0%, #1E3A8A 100%)' }}
+              className="font-heading font-semibold text-sm text-white bg-[#0a0f1c] px-7 py-3 rounded-lg hover:bg-[#1a2332] transition-colors"
             >
               Submit Another Request
             </button>
@@ -135,63 +135,57 @@ export function CallBasisForm() {
       ref={ref as React.RefObject<HTMLElement>}
       className="section-py"
       aria-label="Book a vehicle"
-      style={{ background: 'linear-gradient(180deg, #060E1E 0%, #0D1B3E 50%, #060E1E 100%)' }}
+      style={{ background: '#fafaf8' }}
     >
       <div className="container-wide">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
           {/* Left — Info side */}
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="pt-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease }}
+            className="lg:sticky lg:top-32"
           >
-            <span className="section-label mb-6 inline-flex" style={{ color: '#F0A500', '--tw-ring-color': '#F0A500' } as React.CSSProperties}>
+            <span className="section-label mb-6 inline-flex" style={{ color: '#c8956c' }}>
               BOOK NOW
             </span>
 
             <h2
-              className="font-heading font-extrabold text-white mb-5 leading-tight"
-              style={{ fontSize: 'clamp(28px, 3.2vw, 44px)', letterSpacing: '-0.02em' }}
+              className="font-heading font-extrabold mb-5"
+              style={{
+                color: '#0a0f1c',
+                fontSize: 'clamp(28px, 3vw, 42px)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.1,
+              }}
             >
-              Request a Vehicle{' '}
-              <span
-                style={{
-                  background: 'linear-gradient(90deg, #F0A500 0%, #FCD34D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                on Call Basis.
-              </span>
+              Request a vehicle
+              <br />
+              <span style={{ color: '#c8956c' }}>on call basis.</span>
             </h2>
 
-            <p className="font-body text-lg leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <p className="font-body text-base leading-relaxed mb-10" style={{ color: '#6b7280' }}>
               Fill in your trip details and our fleet specialists will call you back within 2 hours with a tailored quote.
             </p>
 
-            {/* Features list */}
-            <div className="space-y-4">
+            {/* Features — clean list */}
+            <div className="space-y-5">
               {[
                 { icon: Car, title: 'All vehicle categories', sub: 'Sedan, SUV, Minibus, Bus & more' },
-                { icon: Calendar, title: 'Short & long-term rentals', sub: 'Daily, weekly, monthly contracts' },
+                { icon: Calendar, title: 'Flexible contracts', sub: 'Daily, weekly, monthly terms' },
                 { icon: MapPin, title: 'Pan-India coverage', sub: 'All major cities and highways' },
-                { icon: Clock, title: 'Response within 2 hours', sub: 'Our team calls you back fast' },
+                { icon: Clock, title: '2-hour response time', sub: 'Our team calls you back fast' },
               ].map((item) => {
                 const Icon = item.icon
                 return (
                   <div key={item.title} className="flex items-center gap-4">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.2)' }}
-                    >
-                      <Icon size={17} style={{ color: '#60A5FA' }} strokeWidth={1.8} />
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#f5f3f0]">
+                      <Icon size={16} style={{ color: '#6b7280' }} strokeWidth={1.5} />
                     </div>
                     <div>
-                      <p className="font-heading font-semibold text-white text-sm">{item.title}</p>
-                      <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{item.sub}</p>
+                      <p className="font-body font-medium text-sm text-[#0a0f1c]">{item.title}</p>
+                      <p className="font-body text-xs text-[#9ca3af] mt-0.5">{item.sub}</p>
                     </div>
                   </div>
                 )
@@ -201,17 +195,18 @@ export function CallBasisForm() {
 
           {/* Right — Form */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.65, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1, ease }}
           >
             <div
-              className="bg-white rounded-2xl p-7 md:p-9"
-              style={{ boxShadow: '0 32px 80px rgba(0,0,0,0.35)' }}
+              className="bg-white rounded-2xl p-7 md:p-9 border border-black/[0.04]"
+              style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.05)' }}
             >
-              <h3 className="font-heading font-bold text-lg mb-6" style={{ color: '#0D1B3E' }}>
+              <h3 className="font-heading font-bold text-lg mb-1" style={{ color: '#0a0f1c' }}>
                 Trip Details
               </h3>
+              <p className="font-body text-xs text-[#9ca3af] mb-6">All fields marked * are required</p>
 
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -384,8 +379,8 @@ export function CallBasisForm() {
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                                <Phone size={15} style={{ color: '#64748B' }} />
-                                <span className="font-body text-sm ml-1.5" style={{ color: '#64748B' }}>+91</span>
+                                <Phone size={14} style={{ color: '#9ca3af' }} strokeWidth={1.5} />
+                                <span className="font-body text-sm ml-1.5" style={{ color: '#9ca3af' }}>+91</span>
                               </InputAdornment>
                             ),
                           }}
@@ -421,9 +416,9 @@ export function CallBasisForm() {
                 {submitError && (
                   <div
                     className="mt-4 flex items-start gap-3 p-4 rounded-xl"
-                    style={{ backgroundColor: 'rgba(153,27,27,0.08)', border: '1px solid rgba(153,27,27,0.2)' }}
+                    style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}
                   >
-                    <span className="font-body text-sm" style={{ color: '#991B1B' }}>{submitError}</span>
+                    <span className="font-body text-sm" style={{ color: '#c23a22' }}>{submitError}</span>
                   </div>
                 )}
 
@@ -431,13 +426,16 @@ export function CallBasisForm() {
                 <button
                   type="submit"
                   disabled={!isValid || isSubmitting || submitMutation.isPending}
-                  className="w-full mt-6 flex items-center justify-center gap-2.5 font-heading font-bold text-[13px] uppercase tracking-wider text-white py-4 rounded-xl transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full mt-6 flex items-center justify-center gap-2.5 font-heading font-semibold text-[14px] text-white py-4 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{
-                    background: isValid
-                      ? 'linear-gradient(135deg, #0D1B3E 0%, #1E3A8A 100%)'
-                      : 'linear-gradient(135deg, #475569 0%, #334155 100%)',
-                    boxShadow: isValid ? '0 4px 20px rgba(13,27,62,0.35)' : 'none',
+                    background: isValid ? '#0a0f1c' : '#9ca3af',
                     minHeight: '52px',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (isValid) e.currentTarget.style.background = '#1a2332'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (isValid) e.currentTarget.style.background = '#0a0f1c'
                   }}
                 >
                   {isSubmitting || submitMutation.isPending ? (
@@ -448,7 +446,7 @@ export function CallBasisForm() {
                   ) : (
                     <>
                       Submit Booking Request
-                      <Send size={15} />
+                      <ArrowRight size={15} strokeWidth={2} />
                     </>
                   )}
                 </button>

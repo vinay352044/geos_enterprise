@@ -1,94 +1,149 @@
 'use client'
 
-import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import useEmblaCarousel from 'embla-carousel-react'
-import Autoplay from 'embla-carousel-autoplay'
 import { useInView } from '@/hooks/useInView'
-import { clients } from '@/data/clients'
+import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
 
-const featuredClients = [
+type Client = {
+  id: string
+  tag: string
+  name: string
+  description: string
+  logo: string
+}
+
+const allClients: Client[] = [
   {
     id: 'ongc',
-    category: 'OIL & GAS · PSU',
+    tag: 'Oil & Gas',
     name: 'ONGC',
-    description: 'India\'s largest state-owned oil & gas explorer — fleet partner since inception.',
+    description:
+      "India's largest state-owned oil & gas explorer — fleet partner since inception.",
     logo: '/images/clients/ongc.jpg',
-    accent: '#F0A500',
   },
   {
     id: 'vedanta',
-    category: 'RESOURCES · MINING',
+    tag: 'Resources',
     name: 'Vedanta',
-    description: 'Diversified natural resources conglomerate — powering operations across India.',
+    description:
+      'Diversified natural resources conglomerate — powering operations across India.',
     logo: '/images/clients/vedanta.jpg',
-    accent: '#3B82F6',
-  },
-  {
-    id: 'gvk',
-    category: 'EMERGENCY · HEALTHCARE',
-    name: 'GVK EMRI',
-    description: 'Operating India\'s 108 ambulance service — where every minute counts.',
-    logo: '/images/clients/gvk-emri.jpg',
-    accent: '#10B981',
   },
   {
     id: 'bpcl',
-    category: 'PETROLEUM · PSU',
+    tag: 'Petroleum',
     name: 'BPCL',
-    description: 'Fortune Global 500 oil major — trusted fleet logistics across refineries.',
+    description:
+      'Fortune Global 500 oil major — trusted fleet logistics across refineries.',
     logo: '/images/clients/bpcl.jpg',
-    accent: '#F0A500',
+  },
+  {
+    id: 'gvk',
+    tag: 'Healthcare',
+    name: 'GVK EMRI',
+    description:
+      "Operating India's 108 ambulance service — where every minute counts.",
+    logo: '/images/clients/gvk-emri.jpg',
   },
   {
     id: 'adani',
-    category: 'CONGLOMERATE · PRIVATE',
+    tag: 'Infrastructure',
     name: 'Adani Group',
-    description: 'Ports, energy, logistics & infrastructure leader — scaling with our fleet.',
+    description:
+      'Ports, energy, logistics & infrastructure leader — scaling with our fleet.',
     logo: '/images/clients/adani.jpg',
-    accent: '#3B82F6',
   },
   {
-    id: 'more',
-    category: 'GOVERNMENT CONTRACTS',
-    name: '+ More',
-    description: 'Multiple state and central government departments across Gujarat and beyond.',
-    logo: null,
-    accent: '#10B981',
-    isMore: true,
+    id: 'nhsrcl',
+    tag: 'Railways',
+    name: 'NHSRCL',
+    description:
+      "National High Speed Rail Corporation — building India's bullet train corridor.",
+    logo: '/images/clients/nhsrcl.jpg',
+  },
+  {
+    id: 'iffco',
+    tag: 'Agriculture',
+    name: 'IFFCO',
+    description:
+      "World's largest fertilizer cooperative — fleet services across India.",
+    logo: '/images/clients/iffco.jpg',
+  },
+  {
+    id: 'eil',
+    tag: 'Engineering',
+    name: 'EIL',
+    description:
+      "Engineers India Limited — engineering consultancy for India's energy sector.",
+    logo: '/images/clients/eil.jpg',
+  },
+  {
+    id: 'gvk112',
+    tag: 'Emergency',
+    name: 'GVK 112',
+    description: "Jan Rakshak — India's unified emergency response service.",
+    logo: '/images/clients/call-112.jpg',
+  },
+  {
+    id: 'nclt',
+    tag: 'Judiciary',
+    name: 'NCLT',
+    description:
+      "National Company Law Tribunal — serving India's corporate legal framework.",
+    logo: '/images/clients/nclt.jpg',
   },
 ]
 
-function LogoCarousel() {
-  const autoplay = useRef(Autoplay({ delay: 1800, stopOnInteraction: false }))
-  const [emblaRef] = useEmblaCarousel({ loop: true, align: 'start', dragFree: true }, [autoplay.current])
+const ease = [0.25, 1, 0.5, 1] as const
 
+/** Client card — elevated logo tile + bigger breathing room. */
+function ClientCard({ client }: { client: Client }) {
   return (
-    <div className="overflow-hidden" ref={emblaRef}>
-      <div className="flex gap-5">
-        {[...clients, ...clients].map((client, idx) => (
-          <div key={`${client.id}-${idx}`} className="flex-none flex flex-col items-center gap-2">
-            <div
-              className="w-24 h-14 rounded-xl overflow-hidden flex items-center justify-center p-2.5 transition-all duration-300"
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.07)',
-              }}
-            >
-              <div className="relative w-full h-full">
-                <Image src={client.logoPath} alt={client.name} fill className="object-contain opacity-60 hover:opacity-90 transition-opacity" sizes="96px" />
-              </div>
-            </div>
-            <span
-              className="text-[10px] font-heading font-semibold tracking-wide"
-              style={{ color: 'rgba(255,255,255,0.3)' }}
-            >
-              {client.name}
-            </span>
+    <div className="group bg-white rounded-2xl p-7 flex flex-col w-[320px] md:w-[380px] min-h-[240px] border border-black/[0.05] transition-all duration-400 hover:border-black/[0.12] hover:shadow-[0_12px_48px_rgba(0,0,0,0.08)] hover:-translate-y-1">
+      {/* Top: tag + logo */}
+      <div className="flex items-start justify-between mb-6">
+        <span
+          className="font-body font-semibold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-md"
+          style={{ backgroundColor: '#f5f3f0', color: '#6b7280' }}
+        >
+          {client.tag}
+        </span>
+        {client.logo && (
+          <div
+            className="relative w-20 h-14 rounded-lg overflow-hidden shrink-0 bg-white"
+            style={{
+              border: '1px solid rgba(0,0,0,0.06)',
+              boxShadow:
+                '0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
+            }}
+          >
+            <Image
+              src={client.logo}
+              alt={client.name}
+              fill
+              className="object-contain p-1.5"
+              sizes="80px"
+            />
           </div>
-        ))}
+        )}
       </div>
+
+      {/* Name */}
+      <h3
+        className="font-heading font-bold text-xl mb-2 leading-tight"
+        style={{ color: '#0a0f1c' }}
+      >
+        {client.name}
+      </h3>
+
+      {/* Description */}
+      <p
+        className="font-body text-sm leading-relaxed mt-auto"
+        style={{ color: '#9ca3af' }}
+      >
+        {client.description}
+      </p>
     </div>
   )
 }
@@ -96,140 +151,65 @@ function LogoCarousel() {
 export function ClientCarousel() {
   const { ref, inView } = useInView(0.1)
 
+  // Split into two rows for a layered, opposing-direction effect.
+  const firstHalf = allClients.slice(0, 5)
+  const secondHalf = allClients.slice(5)
+
   return (
     <section
       ref={ref as React.RefObject<HTMLElement>}
       aria-label="Our clients"
-      className="section-py"
-      style={{
-        background: 'linear-gradient(180deg, #070E1E 0%, #0A1528 50%, #060E1A 100%)',
-      }}
+      className="section-py bg-[#fafaf8]"
     >
       <div className="container-wide">
         {/* Header */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-14 items-end">
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span
-              className="inline-flex items-center gap-2 font-heading font-bold text-[10px] tracking-[0.22em] uppercase px-3.5 py-2 rounded-full mb-6"
-              style={{
-                backgroundColor: 'rgba(240,165,0,0.1)',
-                color: '#F0A500',
-                border: '1px solid rgba(240,165,0,0.22)',
-              }}
-            >
-              TRUSTED BY INDIA&apos;S BEST
-            </span>
-            <h2
-              className="font-heading font-extrabold text-white leading-tight"
-              style={{ fontSize: 'clamp(28px, 3.5vw, 48px)', letterSpacing: '-0.02em' }}
-            >
-              Powering{' '}
-              <em style={{ color: '#F0A500', fontStyle: 'italic' }}>India&apos;s</em>
-              <br />Biggest Names.
-            </h2>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <p className="font-body text-lg leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              From state-owned oil giants to private conglomerates building tomorrow&apos;s India — our fleet has served the organisations that move the nation forward.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Client Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {featuredClients.map((client, idx) => (
-            <motion.div
-              key={client.id}
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              className="group relative rounded-2xl p-6 flex flex-col min-h-[180px] overflow-hidden transition-all duration-300"
-              style={{
-                backgroundColor: client.isMore ? `${client.accent}08` : 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.06)',
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget as HTMLDivElement
-                el.style.backgroundColor = `${client.accent}08`
-                el.style.borderColor = `${client.accent}20`
-                el.style.transform = 'translateY(-3px)'
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget as HTMLDivElement
-                el.style.backgroundColor = client.isMore ? `${client.accent}08` : 'rgba(255,255,255,0.03)'
-                el.style.borderColor = 'rgba(255,255,255,0.06)'
-                el.style.transform = 'translateY(0)'
-              }}
-            >
-              {/* Left accent line */}
-              <div
-                className="absolute left-0 top-5 bottom-5 w-[3px] rounded-full transition-all duration-300 group-hover:top-3 group-hover:bottom-3"
-                style={{ backgroundColor: client.accent }}
-              />
-
-              {/* Category + Logo */}
-              <div className="flex items-start justify-between mb-4 pl-5">
-                <span
-                  className="font-heading font-bold text-[10px] tracking-[0.16em] uppercase px-2.5 py-1 rounded-lg"
-                  style={{ backgroundColor: `${client.accent}15`, color: client.accent }}
-                >
-                  {client.category}
-                </span>
-                {client.logo && (
-                  <div
-                    className="relative w-11 h-7 rounded-lg overflow-hidden flex-shrink-0 ml-3"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.95)' }}
-                  >
-                    <Image src={client.logo} alt={client.name} fill className="object-contain p-1" sizes="44px" />
-                  </div>
-                )}
-              </div>
-
-              {/* Name & Description */}
-              <div className="flex-1 pl-5">
-                <h3
-                  className="font-heading font-extrabold text-xl mb-2 leading-tight"
-                  style={{ color: client.isMore ? client.accent : '#ffffff' }}
-                >
-                  {client.name}
-                </h3>
-                <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.42)' }}>
-                  {client.description}
-                </p>
-              </div>
-
-              {/* Hover glow */}
-              <div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                style={{ background: `radial-gradient(ellipse at top left, ${client.accent}0A 0%, transparent 60%)` }}
-              />
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Logo Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-14 pt-12"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+          transition={{ duration: 0.6, ease }}
+          className="max-w-2xl mb-12"
         >
-          <p
-            className="text-center font-heading font-bold text-[10px] tracking-[0.22em] uppercase mb-8"
-            style={{ color: 'rgba(255,255,255,0.2)' }}
+          <span className="section-label mb-5 inline-flex">OUR CLIENTS</span>
+          <h2
+            className="font-heading font-extrabold mb-4"
+            style={{ color: '#0a0f1c' }}
           >
-            ALSO SERVING
+            Trusted by India&apos;s
+            <br />
+            biggest names.
+          </h2>
+          <p
+            className="font-body text-base"
+            style={{ color: '#6b7280', lineHeight: 1.7 }}
+          >
+            From state-owned oil giants to private conglomerates building
+            tomorrow&apos;s India — our fleet has served the organisations that
+            move the nation forward.
           </p>
-          <LogoCarousel />
+        </motion.div>
+
+        {/* Infinite scrolling rows */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.15, ease }}
+          className="space-y-6"
+        >
+          <InfiniteMovingCards
+            items={firstHalf}
+            getKey={(client) => client.id}
+            renderItem={(client) => <ClientCard client={client} />}
+            direction="left"
+            speed="slow"
+          />
+
+          <InfiniteMovingCards
+            items={secondHalf}
+            getKey={(client) => client.id}
+            renderItem={(client) => <ClientCard client={client} />}
+            direction="right"
+            speed="slow"
+          />
         </motion.div>
       </div>
     </section>
