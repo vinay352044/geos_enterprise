@@ -169,7 +169,7 @@ export function ClientCarousel() {
           transition={{ duration: 0.6, ease }}
           className="max-w-2xl mb-12"
         >
-          <span className="section-label mb-5 inline-flex">OUR CLIENTS</span>
+          <span className="section-label mb-5 inline-flex" style={{ color: '#c8956c' }}>OUR CLIENTS</span>
           <h2
             className="font-heading font-extrabold mb-4"
             style={{ color: '#0a0f1c' }}
