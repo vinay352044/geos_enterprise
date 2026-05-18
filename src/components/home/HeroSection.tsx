@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, Phone, ShieldCheck, BadgeCheck, Clock } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { companyInfo } from '@/data/companyInfo'
-import { useCountUp } from '@/hooks/useCountUp'
 
 /* ─── Animation Variants ─── */
 const ease = [0.22, 1, 0.36, 1] as const
@@ -19,52 +18,21 @@ const fadeUp = {
   }),
 }
 
-/* ─── Animated Stat Counter ─── */
-function AnimatedStat({
-  value,
-  suffix,
-  label,
-  highlight,
-  delay,
-}: {
-  value: number
-  suffix: string
-  label: string
-  highlight?: boolean
-  delay: number
-}) {
-  const [started, setStarted] = useState(false)
+const CLIENT_LOGOS = [
+  { name: 'ONGC', src: '/images/clients/ongc.jpg' },
+  { name: 'BPCL', src: '/images/clients/bpcl.jpg' },
+  { name: 'Adani', src: '/images/clients/adani.jpg' },
+  { name: 'IFFCO', src: '/images/clients/iffco.jpg' },
+  { name: 'NHSRCL', src: '/images/clients/nhsrcl.jpg' },
+  { name: 'EIL', src: '/images/clients/eil.jpg' },
+] as const
 
-  useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), delay * 1000)
-    return () => clearTimeout(timer)
-  }, [delay])
-
-  const count = useCountUp(value, 1800, started)
-
-  return (
-    <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={delay}>
-      <div
-        className="font-heading font-extrabold mb-1"
-        style={{
-          fontSize: 'clamp(28px, 2.6vw, 40px)',
-          lineHeight: 1,
-          letterSpacing: '-0.025em',
-          color: highlight ? '#c8956c' : '#ffffff',
-        }}
-      >
-        {count}
-        {suffix}
-      </div>
-      <div
-        className="font-body text-[10.5px] font-medium tracking-[0.14em] uppercase"
-        style={{ color: 'rgba(255,255,255,0.5)' }}
-      >
-        {label}
-      </div>
-    </motion.div>
-  )
-}
+const METRICS = [
+  { value: '500+', label: 'Fleet Vehicles' },
+  { value: '35+', label: 'Years Active' },
+  { value: '30+', label: 'Cities Served' },
+  { value: '24×7', label: 'Ops Support' },
+] as const
 
 /* ─── Hero Section ─── */
 export function HeroSection() {
@@ -248,7 +216,7 @@ export function HeroSection() {
             </motion.div>
           </div>
 
-          {/* ─── Right: Navy showcase panel ─── */}
+          {/* ─── Right: Fleet Credentials card ─── */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
@@ -256,119 +224,149 @@ export function HeroSection() {
             className="lg:col-span-5 relative"
           >
             <div
-              className="relative h-full min-h-[440px] lg:min-h-[560px] rounded-2xl lg:rounded-3xl overflow-hidden p-8 lg:p-10 flex flex-col justify-between"
+              className="relative h-full min-h-[460px] lg:min-h-[580px] rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col"
               style={{
-                background:
-                  'linear-gradient(155deg, #0a0f1c 0%, #111827 55%, #1a2332 100%)',
-                boxShadow:
-                  '0 30px 80px -24px rgba(10,15,28,0.45), 0 8px 20px -8px rgba(10,15,28,0.25)',
+                background: 'linear-gradient(160deg, #0a0f1c 0%, #0f1828 55%, #1a2332 100%)',
+                boxShadow: '0 32px 80px -20px rgba(10,15,28,0.55), 0 8px 24px -8px rgba(10,15,28,0.30)',
               }}
             >
-              {/* Decorative grid */}
+              {/* Grid texture */}
               <div
                 aria-hidden
-                className="absolute inset-0 opacity-[0.08] pointer-events-none"
+                className="absolute inset-0 pointer-events-none"
                 style={{
                   backgroundImage:
-                    'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)',
-                  backgroundSize: '40px 40px',
+                    'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+                  backgroundSize: '48px 48px',
                 }}
               />
-              {/* Soft amber glow */}
+              {/* Amber glow — top right */}
               <div
                 aria-hidden
-                className="absolute -bottom-24 -right-24 w-[360px] h-[360px] rounded-full pointer-events-none"
-                style={{
-                  background:
-                    'radial-gradient(circle, rgba(200,149,108,0.22) 0%, transparent 70%)',
-                }}
+                className="absolute -top-20 -right-20 w-[320px] h-[320px] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(200,149,108,0.20) 0%, transparent 65%)' }}
+              />
+              {/* Blue glow — bottom left */}
+              <div
+                aria-hidden
+                className="absolute -bottom-16 -left-16 w-[260px] h-[260px] rounded-full pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(30,64,175,0.18) 0%, transparent 65%)' }}
               />
 
-              {/* Top: Tag + abstract vehicle silhouette */}
-              <div className="relative z-10">
-                <div className="flex items-center justify-between mb-8">
-                  <span className="font-body text-[10.5px] font-semibold tracking-[0.18em] uppercase text-white/45">
-                    Fleet Intelligence
+              {/* ── Status bar ── */}
+              <div className="relative z-10 px-7 lg:px-9 pt-7 lg:pt-9 flex items-center justify-between">
+                <span className="inline-flex items-center gap-2">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-70" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#c8956c]/15 border border-[#c8956c]/30">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#c8956c]" />
-                    <span className="font-body text-[10px] font-semibold tracking-[0.12em] uppercase text-[#c8956c]">
-                      Live
-                    </span>
+                  <span className="font-body text-[10.5px] font-semibold tracking-[0.18em] uppercase text-white/40">
+                    Fleet Status — Operational
                   </span>
-                </div>
-
-                {/* Abstract SUV silhouette */}
-                <svg
-                  aria-hidden
-                  viewBox="0 0 320 100"
-                  className="w-full h-auto mb-6"
-                  fill="none"
-                >
-                  <motion.path
-                    d="M10 78 L40 78 C45 60 60 50 90 48 L130 44 C160 40 180 38 210 42 L240 46 C265 48 280 58 285 78 L310 78"
-                    stroke="rgba(255,255,255,0.35)"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 1.4, delay: 0.6, ease }}
-                  />
-                  <motion.path
-                    d="M50 78 L290 78"
-                    stroke="#c8956c"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: 1.4, ease }}
-                  />
-                  {/* wheels */}
-                  <motion.circle
-                    cx="80"
-                    cy="82"
-                    r="9"
-                    stroke="rgba(255,255,255,0.5)"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4, delay: 1.6, ease }}
-                  />
-                  <motion.circle
-                    cx="250"
-                    cy="82"
-                    r="9"
-                    stroke="rgba(255,255,255,0.5)"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ duration: 0.4, delay: 1.7, ease }}
-                  />
-                </svg>
-
-                <div className="font-heading font-bold text-white text-[20px] lg:text-[22px] leading-tight tracking-[-0.015em] mb-2">
-                  Sedans, SUVs, Tempo Travellers &amp; Buses.
-                </div>
-                <p className="font-body text-[13px] text-white/55 leading-relaxed max-w-[320px]">
-                  Pan-India deployment from a single point of contact.
-                </p>
+                </span>
+                <span className="font-body text-[10.5px] font-medium tracking-[0.10em] text-white/30">
+                  Est. 1988
+                </span>
               </div>
 
-              {/* Stats grid */}
-              <div className="relative z-10 grid grid-cols-3 gap-6 mt-8 pt-8 border-t border-white/[0.08]">
-                {[
-                  { value: 500, suffix: '+', label: 'Fleet Vehicles', delay: 0.7 },
-                  { value: 35, suffix: '+', label: 'Years Active', delay: 0.84 },
-                  {
-                    value: 100,
-                    suffix: '%',
-                    label: 'Taxi Plated',
-                    highlight: true,
-                    delay: 0.98,
-                  },
-                ].map((stat) => (
-                  <AnimatedStat key={stat.label} {...stat} />
+              {/* ── Hero stat — the dominant visual anchor ── */}
+              <div className="relative z-10 px-7 lg:px-9 mt-6 lg:mt-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.45, ease }}
+                >
+                  <div
+                    className="font-heading font-black leading-none tracking-tighter"
+                    style={{
+                      fontSize: 'clamp(72px, 7vw, 96px)',
+                      color: '#c8956c',
+                      textShadow: '0 0 60px rgba(200,149,108,0.35)',
+                    }}
+                  >
+                    100%
+                  </div>
+                  <div className="flex items-baseline gap-3 mt-1">
+                    <span
+                      className="font-heading font-bold tracking-tight text-white"
+                      style={{ fontSize: 'clamp(18px, 1.6vw, 22px)' }}
+                    >
+                      Taxi Plated
+                    </span>
+                    <span
+                      className="font-body text-[12px] font-medium tracking-[0.06em] uppercase px-2 py-0.5 rounded"
+                      style={{ background: 'rgba(200,149,108,0.15)', color: '#c8956c', border: '1px solid rgba(200,149,108,0.25)' }}
+                    >
+                      Every Vehicle
+                    </span>
+                  </div>
+                  <p className="font-body text-[13px] text-white/45 mt-2 leading-relaxed">
+                    Commercially registered. Audit-ready paperwork. Zero exceptions.
+                  </p>
+                </motion.div>
+              </div>
+
+              {/* ── 2×2 metrics grid ── */}
+              <div className="relative z-10 px-7 lg:px-9 mt-6 lg:mt-8 grid grid-cols-2 gap-px rounded-xl overflow-hidden"
+                style={{ background: 'rgba(255,255,255,0.06)' }}
+              >
+                {METRICS.map(({ value, label }, idx) => (
+                  <motion.div
+                    key={label}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 + idx * 0.07, ease }}
+                    className="px-5 py-4"
+                    style={{ background: 'rgba(10,15,28,0.60)' }}
+                  >
+                    <div
+                      className="font-heading font-extrabold leading-none tracking-tight"
+                      style={{ fontSize: 'clamp(22px, 2.2vw, 28px)', color: '#ffffff' }}
+                    >
+                      {value}
+                    </div>
+                    <div className="font-body text-[10.5px] font-semibold tracking-[0.12em] uppercase text-white/40 mt-1.5">
+                      {label}
+                    </div>
+                  </motion.div>
                 ))}
+              </div>
+
+              {/* ── Client logos horizontal strip ── */}
+              <div className="relative z-10 mt-auto px-7 lg:px-9 pb-7 lg:pb-9 pt-6">
+                <div
+                  className="pt-5"
+                  style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
+                >
+                  <p className="font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-white/30 mb-4">
+                    In service with
+                  </p>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    {CLIENT_LOGOS.map((c, idx) => (
+                      <motion.div
+                        key={c.name}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.9 + idx * 0.06, duration: 0.4 }}
+                        title={c.name}
+                        className="relative h-9 w-[64px] rounded-lg overflow-hidden shrink-0 transition-all duration-300 hover:opacity-100"
+                        style={{
+                          background: 'rgba(255,255,255,0.07)',
+                          border: '1px solid rgba(255,255,255,0.09)',
+                        }}
+                      >
+                        <Image
+                          src={c.src}
+                          alt={c.name}
+                          fill
+                          sizes="64px"
+                          className="object-contain p-1.5 brightness-0 invert opacity-60 hover:opacity-90 transition-opacity duration-300"
+                        />
+                      </motion.div>
+                    ))}
+                    <span className="font-body text-[11px] text-white/30 ml-1">+14 more</span>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.div>

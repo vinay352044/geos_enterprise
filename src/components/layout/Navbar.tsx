@@ -35,34 +35,30 @@ export function Navbar() {
         transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
+          'bg-white/85 backdrop-blur-xl border-b',
           scrolled
-            ? 'bg-white/80 backdrop-blur-xl border-b border-black/[0.04] shadow-[0_1px_3px_rgba(0,0,0,0.04)]'
-            : 'bg-transparent'
+            ? 'border-black/[0.06] shadow-[0_2px_10px_rgba(10,15,28,0.06)]'
+            : 'border-black/[0.03] shadow-[0_1px_3px_rgba(10,15,28,0.03)]'
         )}
       >
-        <div className="container-wide h-[64px] flex items-center justify-between">
+        <div className="container-wide h-[76px] flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 outline-none group flex-shrink-0">
-            <div className="relative h-8 w-8 rounded-lg overflow-hidden">
+          <Link href="/" className="flex items-center gap-3 outline-none group flex-shrink-0">
+            <div className="relative h-12 w-12 rounded-xl overflow-hidden ring-1 ring-black/[0.06] shadow-[0_1px_3px_rgba(10,15,28,0.08)]">
               <Image
                 src="/images/geos-logo-new.jpg"
                 alt="GEOS Enterprises"
                 fill
+                sizes="48px"
                 className="object-cover"
                 priority
               />
             </div>
             <div className="flex flex-col leading-none">
-              <span className={cn(
-                'font-heading font-bold text-[15px] tracking-tight transition-colors duration-300',
-                scrolled ? 'text-[#0a0f1c]' : 'text-white'
-              )}>
+              <span className="font-heading font-bold text-[17px] tracking-tight text-[#0a0f1c]">
                 GEOS
               </span>
-              <span className={cn(
-                'font-body text-[10px] font-medium tracking-[0.12em] uppercase transition-colors duration-300',
-                scrolled ? 'text-[#6b7280]' : 'text-white/50'
-              )}>
+              <span className="font-body text-[10.5px] font-medium tracking-[0.16em] uppercase text-[#6b7280] mt-1">
                 Enterprises
               </span>
             </div>
@@ -78,23 +74,16 @@ export function Navbar() {
                   href={link.href}
                   className={cn(
                     'relative px-4 py-2 text-[13px] font-body font-medium rounded-lg transition-colors duration-200 outline-none',
-                    scrolled
-                      ? isActive
-                        ? 'text-[#0a0f1c]'
-                        : 'text-[#6b7280] hover:text-[#0a0f1c]'
-                      : isActive
-                        ? 'text-white'
-                        : 'text-white/55 hover:text-white'
+                    isActive
+                      ? 'text-[#0a0f1c]'
+                      : 'text-[#6b7280] hover:text-[#0a0f1c]'
                   )}
                 >
                   {link.label}
                   {isActive && (
                     <motion.span
                       layoutId="nav-active"
-                      className={cn(
-                        'absolute bottom-0 left-3 right-3 h-[2px] rounded-full',
-                        scrolled ? 'bg-[#0a0f1c]' : 'bg-white'
-                      )}
+                      className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-[#0a0f1c]"
                       transition={{ type: 'spring', bounce: 0.15, duration: 0.4 }}
                     />
                   )}
@@ -109,22 +98,14 @@ export function Navbar() {
               href="https://portal.geosenterprises.in/login"
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(
-                'text-[13px] font-body font-medium transition-colors duration-200',
-                scrolled ? 'text-[#6b7280] hover:text-[#0a0f1c]' : 'text-white/55 hover:text-white'
-              )}
+              className="text-[13px] font-body font-medium text-[#6b7280] hover:text-[#0a0f1c] transition-colors duration-200"
             >
               Login
             </a>
 
             <Link
               href="/#call-basis-form"
-              className={cn(
-                'flex items-center gap-2 font-heading font-semibold text-[13px] px-5 py-2.5 rounded-lg transition-all duration-300',
-                scrolled
-                  ? 'bg-[#0a0f1c] text-white hover:bg-[#1a2332]'
-                  : 'bg-white text-[#0a0f1c] hover:bg-white/90'
-              )}
+              className="flex items-center gap-2 font-heading font-semibold text-[13px] px-5 py-2.5 rounded-lg bg-[#0a0f1c] text-white hover:bg-[#1a2332] transition-all duration-300"
             >
               Book Now
             </Link>
@@ -132,10 +113,7 @@ export function Navbar() {
 
           {/* Mobile hamburger */}
           <button
-            className={cn(
-              'md:hidden flex items-center justify-center w-10 h-10 rounded-lg transition-colors',
-              scrolled ? 'text-[#0a0f1c] hover:bg-black/5' : 'text-white hover:bg-white/10'
-            )}
+            className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg text-[#0a0f1c] hover:bg-black/5 transition-colors"
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
           >
