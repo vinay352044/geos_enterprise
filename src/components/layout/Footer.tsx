@@ -1,89 +1,191 @@
 'use client'
 
-import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { companyInfo } from '@/data/companyInfo'
+import { Phone, Mail, MapPin, ArrowUpRight } from 'lucide-react'
 import { NAV_LINKS, VEHICLE_CATEGORIES } from '@/lib/constants'
+import { companyInfo } from '@/data/companyInfo'
 
 export function Footer() {
-  const pathname = usePathname()
-  const currentYear = new Date().getFullYear()
-
-  if (pathname.startsWith('/admin')) return null
+  const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-[#0a0f1c]">
-      {/* Main footer body */}
-      <div className="container-wide pt-16 pb-12 md:pt-20 md:pb-14">
-        {/* Top section — brand + CTA */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14 pb-10 border-b border-white/[0.06]">
+    <footer
+      id="contact"
+      style={{
+        background: '#0a0f1c',
+        color: '#fff',
+        paddingTop: '80px',
+        paddingBottom: 0,
+      }}
+    >
+      <div className="container-wide">
+        {/* Top bar: brand + CTA */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            gap: '20px',
+            flexWrap: 'wrap',
+            paddingBottom: '40px',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            marginBottom: '48px',
+          }}
+        >
           <div>
-            <h3 className="font-heading font-bold text-white text-xl mb-2 tracking-tight">
+            <h3
+              style={{
+                fontFamily: 'var(--font-heading)',
+                color: '#fff',
+                fontSize: '22px',
+                fontWeight: 800,
+                marginBottom: '8px',
+              }}
+            >
               GEOS Enterprises
             </h3>
-            <p className="font-body text-sm leading-relaxed max-w-md" style={{ color: 'rgba(255,255,255,0.35)' }}>
-              Specialized vehicle provisioning for Government &amp; Corporate sectors.
-              100% Commercially Plated Fleet since 1988.
+            <p
+              style={{
+                color: 'rgba(255,255,255,0.5)',
+                fontSize: '14px',
+                maxWidth: '380px',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
+              Specialized vehicle provisioning for Government &amp; Corporate sectors. 100%
+              Commercially Plated Fleet since 1988.
             </p>
           </div>
           <Link
             href="/#call-basis-form"
-            className="inline-flex items-center gap-2 font-heading font-semibold text-[13px] text-[#0a0f1c] bg-white px-6 py-3 rounded-lg transition-all duration-300 hover:bg-[#f5f3f0] flex-shrink-0"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              fontSize: '13px',
+              background: '#fff',
+              color: '#0a0f1c',
+              padding: '12px 22px',
+              borderRadius: '10px',
+              textDecoration: 'none',
+              transition: 'all 0.3s',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#f5f3f0' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fff' }}
           >
             Book a Vehicle
-            <ArrowUpRight size={14} strokeWidth={2} />
+            <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        {/* Grid columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
-
+        {/* 4-column grid */}
+        <div className="footer-columns">
           {/* Contact */}
           <div>
-            <h4 className="font-body font-medium text-white text-[13px] mb-5">Contact</h4>
-            <div className="space-y-3.5">
-              <a href={`tel:${companyInfo.phone.replace(/\D/g, '')}`} className="flex items-center gap-3 group">
-                <Phone size={13} style={{ color: 'rgba(255,255,255,0.25)' }} strokeWidth={1.5} />
-                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  {companyInfo.phone}
-                </span>
+            <h4
+              style={{
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+              }}
+            >
+              Contact
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <a
+                href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  color: 'rgba(255,255,255,0.55)',
+                  fontSize: '13.5px',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
+              >
+                <Phone size={13} style={{ flexShrink: 0, marginTop: '3px', opacity: 0.5 }} />
+                {companyInfo.phone}
               </a>
-              <a href={`mailto:${companyInfo.email}`} className="flex items-center gap-3 group">
-                <Mail size={13} style={{ color: 'rgba(255,255,255,0.25)' }} strokeWidth={1.5} />
-                <span className="font-body text-sm group-hover:text-white transition-colors" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  {companyInfo.email}
-                </span>
+              <a
+                href={`mailto:${companyInfo.email}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  color: 'rgba(255,255,255,0.55)',
+                  fontSize: '13.5px',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
+              >
+                <Mail size={13} style={{ flexShrink: 0, marginTop: '3px', opacity: 0.5 }} />
+                {companyInfo.email}
               </a>
-              <div className="flex items-start gap-3">
-                <MapPin size={13} style={{ color: 'rgba(255,255,255,0.25)', marginTop: '3px' }} strokeWidth={1.5} />
-                <span className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                  {companyInfo.address.full}
-                </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: '10px',
+                  color: 'rgba(255,255,255,0.55)',
+                  fontSize: '13.5px',
+                }}
+              >
+                <MapPin size={13} style={{ flexShrink: 0, marginTop: '3px', opacity: 0.5 }} />
+                <span style={{ lineHeight: 1.6 }}>{companyInfo.address.full}</span>
               </div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-body font-medium text-white text-[13px] mb-5">Quick Links</h4>
-            <ul className="space-y-2.5">
-              {NAV_LINKS.map((link) => (
-                <li key={link.href}>
+            <h4
+              style={{
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+              }}
+            >
+              Quick Links
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
                   <Link
-                    href={link.href}
-                    className="font-body text-sm hover:text-white transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.4)' }}
+                    href={l.href}
+                    style={{
+                      color: 'rgba(255,255,255,0.55)',
+                      fontSize: '13.5px',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s',
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
                   >
-                    {link.label}
+                    {l.label}
                   </Link>
                 </li>
               ))}
               <li>
                 <Link
                   href="/privacy-policy"
-                  className="font-body text-sm hover:text-white transition-colors"
-                  style={{ color: 'rgba(255,255,255,0.4)' }}
+                  style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
                 >
                   Privacy Policy
                 </Link>
@@ -93,16 +195,28 @@ export function Footer() {
 
           {/* Fleet */}
           <div>
-            <h4 className="font-body font-medium text-white text-[13px] mb-5">Fleet</h4>
-            <ul className="space-y-2.5">
-              {VEHICLE_CATEGORIES.filter((c) => c !== 'All').map((cat) => (
-                <li key={cat}>
+            <h4
+              style={{
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+              }}
+            >
+              Fleet
+            </h4>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {VEHICLE_CATEGORIES.filter(c => c !== 'All').map((c) => (
+                <li key={c}>
                   <Link
-                    href={`/fleet?category=${encodeURIComponent(cat)}`}
-                    className="font-body text-sm hover:text-white transition-colors"
-                    style={{ color: 'rgba(255,255,255,0.4)' }}
+                    href={`/marketplace?category=${encodeURIComponent(c)}`}
+                    style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
                   >
-                    {cat}
+                    {c}
                   </Link>
                 </li>
               ))}
@@ -111,40 +225,85 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="font-body font-medium text-white text-[13px] mb-5">Legal</h4>
-            <div className="space-y-3 text-sm font-body">
+            <h4
+              style={{
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: '18px',
+              }}
+            >
+              Legal
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {[
-                { label: 'GST', value: companyInfo.gst },
-                { label: 'CIN', value: companyInfo.cin },
-                { label: 'Est.', value: companyInfo.establishedYear },
+                { label: 'GST', val: companyInfo.gst },
+                { label: 'CIN', val: companyInfo.cin },
+                { label: 'Est.', val: String(companyInfo.establishedYear) },
               ].map((item) => (
                 <div key={item.label}>
-                  <span className="font-body text-[11px] font-medium uppercase tracking-wider" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                  <div
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      letterSpacing: '0.14em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.25)',
+                      marginBottom: '3px',
+                    }}
+                  >
                     {item.label}
-                  </span>
-                  <p style={{ color: 'rgba(255,255,255,0.45)' }}>{item.value}</p>
+                  </div>
+                  <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '13.5px', margin: 0, lineHeight: 1.6 }}>
+                    {item.val}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Bottom bar — minimal */}
-      <div className="border-t border-white/[0.04]">
-        <div className="container-wide py-5 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
-            &copy; {currentYear} GEOS Enterprises. All rights reserved.
+        {/* Bottom bar */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255,255,255,0.04)',
+            padding: '22px 0',
+            marginTop: '56px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '16px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '12px', margin: 0 }}>
+            &copy; {year} GEOS Enterprises. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
-            {['100% Taxi Plated', 'GST Registered', 'All India Permit'].map((badge) => (
-              <span key={badge} className="font-body text-[10px] font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.15)' }}>
-                {badge}
+          <div style={{ display: 'flex', gap: '22px', flexWrap: 'wrap' }}>
+            {['100% Taxi Plated', 'GST Registered', 'All India Permit'].map((b) => (
+              <span key={b} style={{ color: 'rgba(255,255,255,0.25)', fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.06em' }}>
+                {b}
               </span>
             ))}
           </div>
         </div>
       </div>
+
+      <style>{`
+        .footer-columns {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        @media (min-width: 640px) {
+          .footer-columns { grid-template-columns: 1fr 1fr; }
+        }
+        @media (min-width: 1024px) {
+          .footer-columns { grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+        }
+      `}</style>
     </footer>
   )
 }

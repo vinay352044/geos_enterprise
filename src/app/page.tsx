@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { HeroSection } from '@/components/home/HeroSection'
-import { StatsBar } from '@/components/home/StatsBar'
-import { ClientCarousel } from '@/components/home/ClientCarousel'
-import { WhyChooseUs } from '@/components/home/WhyChooseUs'
 import { CallBasisForm } from '@/components/home/CallBasisForm'
+import { ClientCarousel } from '@/components/home/ClientCarousel'
+import { Testimonials } from '@/components/home/Testimonials'
+import { WhyChooseUs } from '@/components/home/WhyChooseUs'
+import { CTABanner } from '@/components/home/CTABanner'
+import { MarketplacePreview } from '@/components/home/MarketplacePreview'
 import { SEO_DEFAULTS } from '@/lib/constants'
 
 export const metadata: Metadata = {
@@ -30,10 +32,12 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <StatsBar />
-      <ClientCarousel />
-      <WhyChooseUs />
       <CallBasisForm />
+      <MarketplacePreview />
+      <ClientCarousel />
+      <Testimonials />
+      <WhyChooseUs />
+      <CTABanner />
     </>
   )
 }

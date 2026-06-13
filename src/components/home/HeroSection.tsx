@@ -1,419 +1,514 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { ArrowRight, Phone, ShieldCheck, BadgeCheck, Clock } from 'lucide-react'
-import Image from 'next/image'
+import { ArrowRight, Phone, Check, Shield } from 'lucide-react'
 import Link from 'next/link'
 import { companyInfo } from '@/data/companyInfo'
 
-/* ─── Animation Variants ─── */
-const ease = [0.22, 1, 0.36, 1] as const
+const HERO_STATS = [
+  { val: '500+', label: 'Fleet Vehicles', detail: 'All categories' },
+  { val: '35+', label: 'Years', detail: 'Est. 1988' },
+  { val: '100%', label: 'Taxi Plated', detail: 'Zero exceptions' },
+  { val: '25+', label: 'PSU Clients', detail: 'Govt + Enterprise' },
+]
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay, ease },
-  }),
-}
+const TRUST_ITEMS = [
+  'GST Registered',
+  'All India Permit',
+  '24×7 Ops Support',
+  'GPS Tracked Fleet',
+]
 
-const CLIENT_LOGOS = [
-  { name: 'ONGC', src: '/images/clients/ongc.jpg' },
-  { name: 'BPCL', src: '/images/clients/bpcl.jpg' },
-  { name: 'Adani', src: '/images/clients/adani.jpg' },
-  { name: 'IFFCO', src: '/images/clients/iffco.jpg' },
-  { name: 'NHSRCL', src: '/images/clients/nhsrcl.jpg' },
-  { name: 'EIL', src: '/images/clients/eil.jpg' },
-] as const
-
-const METRICS = [
-  { value: '500+', label: 'Fleet Vehicles' },
-  { value: '35+', label: 'Years Active' },
-  { value: '30+', label: 'Cities Served' },
-  { value: '24×7', label: 'Ops Support' },
-] as const
-
-/* ─── Hero Section ─── */
 export function HeroSection() {
   return (
     <section
-      className="relative bg-[var(--color-ice)] overflow-hidden"
-      aria-label="Hero section"
+      id="home"
+      style={{ position: 'relative', paddingTop: '76px', overflow: 'hidden' }}
     >
-      {/* Subtle background texture — diagonal grid + soft amber wash */}
+      {/* Full-bleed background with dark overlay */}
       <div
         aria-hidden
-        className="absolute inset-0 pointer-events-none opacity-[0.35]"
         style={{
-          backgroundImage:
-            'linear-gradient(to right, rgba(10,15,28,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,15,28,0.04) 1px, transparent 1px)',
-          backgroundSize: '64px 64px',
-          maskImage:
-            'radial-gradient(ellipse 80% 60% at 30% 40%, #000 50%, transparent 100%)',
+          position: 'absolute',
+          inset: '76px 0 0 0',
+          zIndex: 0,
+          backgroundImage: `
+            linear-gradient(105deg, rgba(10,15,28,0.92) 0%, rgba(10,15,28,0.78) 42%, rgba(10,15,28,0.30) 100%),
+            url('https://images.unsplash.com/photo-1542362567-b07e54358753?w=1800&q=80')
+          `,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center right',
         }}
-      />
-      <div
-        aria-hidden
-        className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(circle, rgba(200,149,108,0.18) 0%, transparent 70%)',
-        }}
-      />
+      >
+        {/* Grid overlay */}
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
+            `,
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse 80% 60% at 30% 50%, #000 40%, transparent 80%)',
+          }}
+        />
+      </div>
 
-      <div className="relative container-wide pt-20 pb-0 md:pt-28 md:pb-0 lg:pt-32">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-stretch">
-          {/* ─── Left: Editorial content ─── */}
-          <div className="lg:col-span-7 flex flex-col justify-center pb-16 lg:pb-32">
+      {/* Hero content */}
+      <div
+        className="container-wide"
+        style={{
+          position: 'relative',
+          zIndex: 2,
+          minHeight: '720px',
+          display: 'flex',
+          alignItems: 'stretch',
+          paddingTop: '56px',
+          paddingBottom: '120px',
+        }}
+      >
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gap: '56px',
+            width: '100%',
+            alignItems: 'center',
+          }}
+          className="hero-grid"
+        >
+          {/* Left: editorial content */}
+          <div>
             {/* Eyebrow pill */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.1}
-              className="inline-flex items-center gap-2 self-start mb-7 px-3.5 py-1.5 rounded-full bg-white border border-[var(--color-silver)] shadow-sm"
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '7px 14px',
+                borderRadius: '999px',
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(10px)',
+                color: 'rgba(255,255,255,0.85)',
+                fontSize: '11px',
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                marginBottom: '28px',
+              }}
             >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-success)] opacity-60" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-success)]" />
-              </span>
-              <span className="font-body text-[11px] font-semibold tracking-[0.14em] uppercase text-[var(--color-slate)]">
-                Est. 1988 · Trusted by Govt. of India
-              </span>
-            </motion.div>
+              <span
+                style={{
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  background: '#22c55e',
+                  boxShadow: '0 0 12px #22c55e',
+                  flexShrink: 0,
+                }}
+              />
+              Est. 1988 · Trusted by Govt. of India
+            </div>
 
             {/* Headline */}
             <h1
-              className="font-heading font-extrabold mb-6 text-[var(--color-navy)]"
               style={{
-                fontSize: 'clamp(40px, 5.4vw, 76px)',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: 'clamp(40px, 5.6vw, 76px)',
                 lineHeight: 1.02,
                 letterSpacing: '-0.035em',
-                maxWidth: '720px',
+                color: '#fff',
+                marginBottom: '24px',
+                maxWidth: '740px',
               }}
             >
-              <motion.span
-                className="block"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={0.2}
+              Commercial Fleet,
+              <br />
+              Driven by{' '}
+              <span
+                style={{
+                  color: '#c8956c',
+                  fontStyle: 'normal',
+                  fontWeight: 800,
+                  position: 'relative',
+                  display: 'inline-block',
+                }}
               >
-                Commercial Fleet,
-              </motion.span>
-              <motion.span
-                className="block"
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                custom={0.32}
-              >
-                Driven by{' '}
+                Compliance
                 <span
-                  className="italic font-bold relative inline-block"
-                  style={{ color: '#c8956c' }}
-                >
-                  Compliance
-                  <svg
-                    aria-hidden
-                    className="absolute left-0 -bottom-1 w-full"
-                    height="10"
-                    viewBox="0 0 200 10"
-                    fill="none"
-                    preserveAspectRatio="none"
-                  >
-                    <motion.path
-                      d="M2 7 Q 50 2, 100 5 T 198 4"
-                      stroke="#c8956c"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      fill="none"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: 0.9, duration: 0.9, ease }}
-                    />
-                  </svg>
-                </span>
-                .
-              </motion.span>
+                  aria-hidden
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    bottom: '-4px',
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #c8956c 0%, transparent 100%)',
+                    borderRadius: '2px',
+                    opacity: 0.6,
+                    display: 'block',
+                  }}
+                />
+              </span>
+              .
             </h1>
 
-            {/* Sub-copy */}
-            <motion.p
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.45}
-              className="font-body text-base md:text-[17px] mb-9 text-[var(--color-slate)]"
+            {/* Sub */}
+            <p
               style={{
-                maxWidth: '540px',
+                fontSize: '17px',
                 lineHeight: 1.65,
+                color: 'rgba(255,255,255,0.72)',
+                maxWidth: '560px',
+                marginBottom: '36px',
               }}
             >
-              500+ <strong className="text-[var(--color-navy)]">100% Taxi Plated</strong>{' '}
-              vehicles serving PSUs, government bodies, and India&apos;s largest
-              corporations. Audit-ready paperwork. Zero exceptions.
-            </motion.p>
+              500+{' '}
+              <strong style={{ color: '#fff', fontWeight: 600 }}>100% Taxi-Plated</strong>{' '}
+              vehicles serving PSUs, government bodies, and India&apos;s largest corporations.
+              Audit-ready paperwork. Zero exceptions.
+            </p>
 
-            {/* CTA buttons */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.55}
-              className="flex flex-col sm:flex-row gap-3 mb-10"
+            {/* CTAs */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '12px',
+                alignItems: 'center',
+                marginBottom: '32px',
+              }}
             >
               <Link
                 href="/#call-basis-form"
-                className="group inline-flex items-center justify-center gap-2.5 font-heading font-semibold text-[14px] text-white bg-[var(--color-navy)] px-7 py-4 rounded-xl transition-all duration-300 hover:bg-[var(--color-navy-light)] hover:shadow-[0_18px_40px_-12px_rgba(10,15,28,0.45)] hover:-translate-y-0.5"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: '13.5px',
+                  background: '#c8956c',
+                  color: '#fff',
+                  padding: '14px 26px',
+                  borderRadius: '10px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s cubic-bezier(0.23,1,0.32,1)',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#a87650'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#c8956c'; e.currentTarget.style.transform = 'none' }}
               >
-                Request a Vehicle
-                <ArrowRight
-                  size={15}
-                  strokeWidth={2.25}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                />
+                Book Now
+                <ArrowRight size={14} />
               </Link>
 
+              <Link
+                href="/contact"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: '13.5px',
+                  background: '#fff',
+                  color: '#0a0f1c',
+                  border: '1px solid #e5e2dd',
+                  padding: '14px 26px',
+                  borderRadius: '10px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = '#0a0f1c' }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e5e2dd' }}
+              >
+                Contact Us
+              </Link>
+
+              {/* Phone pill */}
               <a
                 href={`tel:${companyInfo.phone.replace(/\D/g, '')}`}
-                className="group inline-flex items-center justify-center gap-2.5 font-body font-semibold text-[14px] px-7 py-4 rounded-xl bg-white border border-[var(--color-silver)] text-[var(--color-navy)] transition-all duration-300 hover:border-[var(--color-navy)] hover:shadow-md"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '14px',
+                  padding: '4px 4px 4px 18px',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  backdropFilter: 'blur(8px)',
+                  borderRadius: '999px',
+                  color: '#fff',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)' }}
               >
-                <Phone
-                  size={14}
-                  strokeWidth={2}
-                  className="text-[#c8956c] transition-transform duration-300 group-hover:rotate-12"
-                />
-                {companyInfo.phone}
-              </a>
-            </motion.div>
-
-            {/* Trust strip — feature pills */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={0.7}
-              className="flex flex-wrap gap-x-6 gap-y-3"
-            >
-              {[
-                { icon: BadgeCheck, label: '100% Taxi Plated' },
-                { icon: ShieldCheck, label: 'Govt. Empanelled' },
-                { icon: Clock, label: '24×7 Dispatch' },
-              ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2">
-                  <Icon
-                    size={16}
-                    strokeWidth={2}
-                    className="text-[var(--color-success)]"
-                  />
-                  <span className="font-body text-[13px] font-medium text-[var(--color-slate)]">
-                    {label}
+                <div>
+                  <span style={{ display: 'block', fontSize: '9.5px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)', lineHeight: 1, marginBottom: '4px' }}>
+                    24×7 dispatch
                   </span>
+                  <span style={{ display: 'block', lineHeight: 1, letterSpacing: '-0.01em' }}>
+                    {companyInfo.phone}
+                  </span>
+                </div>
+                <span
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    display: 'grid',
+                    placeItems: 'center',
+                    background: '#c8956c',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <Phone size={16} color="#fff" />
+                </span>
+              </a>
+            </div>
+
+            {/* Trust items */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '22px', alignItems: 'center' }}>
+              {TRUST_ITEMS.map((t) => (
+                <div
+                  key={t}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '12.5px',
+                    color: 'rgba(255,255,255,0.7)',
+                    fontWeight: 500,
+                  }}
+                >
+                  <Check size={13} color="#22c55e" />
+                  {t}
                 </div>
               ))}
-            </motion.div>
+            </div>
           </div>
 
-          {/* ─── Right: Fleet Credentials card ─── */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.3, ease }}
-            className="lg:col-span-5 relative"
+          {/* Right: glass Quick Quote card */}
+          <div
+            style={{
+              position: 'relative',
+              background: 'linear-gradient(160deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              backdropFilter: 'blur(24px)',
+              borderRadius: '24px',
+              padding: '32px',
+              color: '#fff',
+              boxShadow: '0 32px 80px -20px rgba(0,0,0,0.5)',
+            }}
           >
-            <div
-              className="relative h-full min-h-[460px] lg:min-h-[580px] rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col"
-              style={{
-                background: 'linear-gradient(160deg, #0a0f1c 0%, #0f1828 55%, #1a2332 100%)',
-                boxShadow: '0 32px 80px -20px rgba(10,15,28,0.55), 0 8px 24px -8px rgba(10,15,28,0.30)',
-              }}
-            >
-              {/* Grid texture */}
-              <div
-                aria-hidden
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
-                  backgroundSize: '48px 48px',
-                }}
-              />
-              {/* Amber glow — top right */}
-              <div
-                aria-hidden
-                className="absolute -top-20 -right-20 w-[320px] h-[320px] rounded-full pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(200,149,108,0.20) 0%, transparent 65%)' }}
-              />
-              {/* Blue glow — bottom left */}
-              <div
-                aria-hidden
-                className="absolute -bottom-16 -left-16 w-[260px] h-[260px] rounded-full pointer-events-none"
-                style={{ background: 'radial-gradient(circle, rgba(30,64,175,0.18) 0%, transparent 65%)' }}
-              />
-
-              {/* ── Status bar ── */}
-              <div className="relative z-10 px-7 lg:px-9 pt-7 lg:pt-9 flex items-center justify-between">
-                <span className="inline-flex items-center gap-2">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#22c55e] opacity-70" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#22c55e]" />
-                  </span>
-                  <span className="font-body text-[10.5px] font-semibold tracking-[0.18em] uppercase text-white/40">
-                    Fleet Status — Operational
-                  </span>
-                </span>
-                <span className="font-body text-[10.5px] font-medium tracking-[0.10em] text-white/30">
-                  Est. 1988
-                </span>
-              </div>
-
-              {/* ── Hero stat — the dominant visual anchor ── */}
-              <div className="relative z-10 px-7 lg:px-9 mt-6 lg:mt-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 0.45, ease }}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <div>
+                <h3
+                  style={{
+                    color: '#fff',
+                    fontFamily: 'var(--font-heading)',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                    marginBottom: '4px',
+                  }}
                 >
-                  <div
-                    className="font-heading font-black leading-none tracking-tighter"
+                  Quick Quote
+                </h3>
+                <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', margin: 0 }}>Response within 2 hours</p>
+              </div>
+              <span
+                style={{
+                  fontSize: '10.5px',
+                  fontWeight: 600,
+                  letterSpacing: '0.14em',
+                  textTransform: 'uppercase',
+                  color: '#c8956c',
+                  padding: '4px 9px',
+                  borderRadius: '6px',
+                  background: 'rgba(200,149,108,0.14)',
+                  border: '1px solid rgba(200,149,108,0.3)',
+                }}
+              >
+                On-Call
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              {[
+                { label: 'Pickup', val: 'Ahmedabad' },
+                { label: 'Drop', val: 'Anywhere · India' },
+                { label: 'Vehicle', val: 'SUV / Tempo Traveller' },
+                { label: 'Start Date', val: 'Pick a date' },
+              ].map((f) => (
+                <div
+                  key={f.label}
+                  style={{
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: '10px',
+                    padding: '12px 14px',
+                  }}
+                >
+                  <label
                     style={{
-                      fontSize: 'clamp(72px, 7vw, 96px)',
-                      color: '#c8956c',
-                      textShadow: '0 0 60px rgba(200,149,108,0.35)',
+                      display: 'block',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.5)',
+                      marginBottom: '6px',
                     }}
                   >
-                    100%
-                  </div>
-                  <div className="flex items-baseline gap-3 mt-1">
-                    <span
-                      className="font-heading font-bold tracking-tight text-white"
-                      style={{ fontSize: 'clamp(18px, 1.6vw, 22px)' }}
-                    >
-                      Taxi Plated
-                    </span>
-                    <span
-                      className="font-body text-[12px] font-medium tracking-[0.06em] uppercase px-2 py-0.5 rounded"
-                      style={{ background: 'rgba(200,149,108,0.15)', color: '#c8956c', border: '1px solid rgba(200,149,108,0.25)' }}
-                    >
-                      Every Vehicle
-                    </span>
-                  </div>
-                  <p className="font-body text-[13px] text-white/45 mt-2 leading-relaxed">
-                    Commercially registered. Audit-ready paperwork. Zero exceptions.
-                  </p>
-                </motion.div>
-              </div>
-
-              {/* ── 2×2 metrics grid ── */}
-              <div className="relative z-10 px-7 lg:px-9 mt-6 lg:mt-8 grid grid-cols-2 gap-px rounded-xl overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.06)' }}
-              >
-                {METRICS.map(({ value, label }, idx) => (
-                  <motion.div
-                    key={label}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.6 + idx * 0.07, ease }}
-                    className="px-5 py-4"
-                    style={{ background: 'rgba(10,15,28,0.60)' }}
-                  >
-                    <div
-                      className="font-heading font-extrabold leading-none tracking-tight"
-                      style={{ fontSize: 'clamp(22px, 2.2vw, 28px)', color: '#ffffff' }}
-                    >
-                      {value}
-                    </div>
-                    <div className="font-body text-[10.5px] font-semibold tracking-[0.12em] uppercase text-white/40 mt-1.5">
-                      {label}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* ── Client logos horizontal strip ── */}
-              <div className="relative z-10 mt-auto px-7 lg:px-9 pb-7 lg:pb-9 pt-6">
-                <div
-                  className="pt-5"
-                  style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}
-                >
-                  <p className="font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-white/30 mb-4">
-                    In service with
-                  </p>
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    {CLIENT_LOGOS.map((c, idx) => (
-                      <motion.div
-                        key={c.name}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.9 + idx * 0.06, duration: 0.4 }}
-                        title={c.name}
-                        className="relative h-9 w-[64px] rounded-lg overflow-hidden shrink-0 transition-all duration-300 hover:opacity-100"
-                        style={{
-                          background: 'rgba(255,255,255,0.07)',
-                          border: '1px solid rgba(255,255,255,0.09)',
-                        }}
-                      >
-                        <Image
-                          src={c.src}
-                          alt={c.name}
-                          fill
-                          sizes="64px"
-                          className="object-contain p-1.5 brightness-0 invert opacity-60 hover:opacity-90 transition-opacity duration-300"
-                        />
-                      </motion.div>
-                    ))}
-                    <span className="font-body text-[11px] text-white/30 ml-1">+14 more</span>
-                  </div>
+                    {f.label}
+                  </label>
+                  <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>{f.val}</div>
                 </div>
+              ))}
+              <div
+                style={{
+                  gridColumn: '1/-1',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                }}
+              >
+                <label
+                  style={{
+                    display: 'block',
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.5)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Contract Type
+                </label>
+                <div style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>Daily · Weekly · Monthly</div>
               </div>
             </div>
-          </motion.div>
-        </div>
 
-        {/* ─── Trust bar (clients) ─── */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.1, duration: 0.7, ease }}
-          className="mt-12 lg:mt-16 pt-8 pb-10 border-t border-[var(--color-silver)]"
-        >
-          <div className="flex flex-col md:flex-row md:items-center gap-5 md:gap-10">
-            <span
-              className="font-body text-[10.5px] font-semibold tracking-[0.18em] uppercase shrink-0"
-              style={{ color: 'var(--color-slate-muted)' }}
+            <Link
+              href="/#call-basis-form"
+              style={{
+                marginTop: '14px',
+                width: '100%',
+                background: '#c8956c',
+                color: '#fff',
+                padding: '13px',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: '13px',
+                letterSpacing: '0.02em',
+                borderRadius: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                textDecoration: 'none',
+                transition: 'background 0.3s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#a87650')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#c8956c')}
             >
-              Trusted by
-            </span>
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-              {['ONGC', 'Vedanta', 'BPCL', 'Adani Group', 'GVK EMRI', 'IFFCO'].map(
-                (name, idx) => (
-                  <motion.span
-                    key={name}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.2 + idx * 0.06, duration: 0.4 }}
-                    className="font-heading font-bold text-[12px] tracking-[0.1em] uppercase"
-                    style={{ color: 'var(--color-slate)' }}
-                  >
-                    {name}
-                  </motion.span>
-                ),
-              )}
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.6, duration: 0.4 }}
-                className="font-body text-[12px] italic"
-                style={{ color: 'var(--color-slate-muted)' }}
+              Get a Tailored Quote
+              <ArrowRight size={14} />
+            </Link>
+
+            <div
+              style={{
+                marginTop: '20px',
+                paddingTop: '20px',
+                borderTop: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <div
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: 'rgba(200,149,108,0.16)',
+                  display: 'grid',
+                  placeItems: 'center',
+                  color: '#c8956c',
+                  flexShrink: 0,
+                }}
               >
-                &amp; 20+ more
-              </motion.span>
+                <Shield size={15} />
+              </div>
+              <div style={{ fontSize: '11.5px', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                <strong style={{ color: '#fff', fontWeight: 600 }}>Trusted by ONGC, BPCL, Adani, Vedanta</strong>
+                <br />
+                &amp; 20+ corporates / PSUs across India.
+              </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
+
+      {/* Floating stats strip */}
+      <div
+        className="container-wide"
+        style={{
+          position: 'relative',
+          zIndex: 3,
+          marginTop: '-40px',
+          marginBottom: '64px',
+        }}
+      >
+        <div
+          style={{
+            background: '#fff',
+            borderRadius: '16px',
+            padding: 'clamp(20px, 3vw, 28px) clamp(24px, 4vw, 36px)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '28px',
+            boxShadow: '0 24px 60px -20px rgba(10,15,28,0.18)',
+            border: '1px solid rgba(0,0,0,0.04)',
+          }}
+        >
+          {HERO_STATS.map((s) => (
+            <div key={s.label}>
+              <div
+                style={{
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 800,
+                  fontSize: 'clamp(28px, 3vw, 40px)',
+                  color: '#0a0f1c',
+                  letterSpacing: '-0.03em',
+                  lineHeight: 1,
+                  marginBottom: '6px',
+                }}
+              >
+                {s.val}
+              </div>
+              <div style={{ fontSize: '12.5px', color: '#0a0f1c', fontWeight: 600 }}>{s.label}</div>
+              <div style={{ fontSize: '11.5px', color: '#9ca3af', marginTop: '2px' }}>{s.detail}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @media (min-width: 1024px) {
+          .hero-grid { grid-template-columns: 1.15fr 1fr !important; }
+        }
+      `}</style>
     </section>
   )
 }

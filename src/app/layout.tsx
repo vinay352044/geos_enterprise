@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer'
 import { UtilityBar } from '@/components/layout/UtilityBar'
 import { MobileMenu } from '@/components/layout/MobileMenu'
 import { MainWrapper } from '@/components/layout/MainWrapper'
+import { FloatingWidgets } from '@/components/layout/FloatingWidgets'
 import { SEO_DEFAULTS } from '@/lib/constants'
 import './globals.css'
 
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <MainWrapper>{children}</MainWrapper>
                 <Footer />
                 <MobileMenu />
+                <FloatingWidgets />
               </QueryProvider>
             </ReduxProvider>
           </ThemeProvider>

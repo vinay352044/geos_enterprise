@@ -1,460 +1,370 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
-import { TextField, MenuItem, CircularProgress, InputAdornment } from '@mui/material'
-import { motion } from 'framer-motion'
-import { Phone, CheckCircle, Send, Calendar, MapPin, Car, Clock, ArrowRight } from 'lucide-react'
-import { leadFormSchema, type LeadFormData } from '@/lib/validators'
-import { submitLeadApi } from '@/lib/api'
-import { useAppSelector } from '@/store'
+import { useState, FormEvent } from 'react'
+import { Car, Calendar, MapPin, Clock, ArrowRight, CheckCircle } from 'lucide-react'
 import { VEHICLE_CATEGORIES } from '@/lib/constants'
-import { useInView } from '@/hooks/useInView'
 
-const VEHICLE_OPTIONS = VEHICLE_CATEGORIES.filter((c) => c !== 'All')
-const ease = [0.25, 1, 0.5, 1] as const
+const FEATURES = [
+  { icon: Car, title: 'All vehicle categories', sub: 'Sedan, SUV, Minibus, Bus & more' },
+  { icon: Calendar, title: 'Flexible contracts', sub: 'Daily, weekly, monthly terms' },
+  { icon: MapPin, title: 'Pan-India coverage', sub: 'All major cities and highways' },
+  { icon: Clock, title: '2-hour response time', sub: 'Our team calls you back fast' },
+]
 
 export function CallBasisForm() {
-  const [submitSuccess, setSubmitSuccess] = useState<string | null>(null)
-  const [submitError, setSubmitError] = useState<string | null>(null)
-  const { ref, inView } = useInView(0.1)
-  const prefilledVehicle = useAppSelector((s) => s.form.prefilledVehicleType)
-  const today = new Date().toISOString().split('T')[0]
-
-  const {
-    control,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors, isSubmitting, isValid },
-  } = useForm<LeadFormData>({
-    resolver: zodResolver(leadFormSchema),
-    defaultValues: {
-      customerName: '',
-      pickupLocation: '',
-      dropLocation: '',
-      tripStartDate: '',
-      tripEndDate: '',
-      tripStartTime: '',
-      tripEndTime: '',
-      vehicleType: undefined,
-      contactNumber: '',
-      additionalNotes: '',
-    },
+  const [form, setForm] = useState({
+    name: '', vehicleType: '', pickup: '', drop: '',
+    startDate: '', endDate: '', startTime: '', endTime: '',
+    phone: '', notes: '',
   })
+  const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    if (prefilledVehicle) {
-      setValue('vehicleType', prefilledVehicle as LeadFormData['vehicleType'])
-    }
-  }, [prefilledVehicle, setValue])
+  const handle = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+    setForm({ ...form, [k]: e.target.value })
 
-  const submitMutation = useMutation({
-    mutationFn: submitLeadApi,
-    onSuccess: (data) => {
-      if (data.success && data.data) {
-        setSubmitSuccess(data.data.message)
-        reset()
-      } else {
-        setSubmitError(data.error || 'Something went wrong. Please call us at +91-92274-76900.')
-      }
-    },
-    onError: () => {
-      setSubmitError('Something went wrong. Please call us at +91-92274-76900 or try again.')
-    },
-  })
-
-  const onSubmit = (data: LeadFormData) => {
-    setSubmitError(null)
-    submitMutation.mutate(data as unknown as Record<string, unknown>)
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    await new Promise(r => setTimeout(r, 800))
+    setLoading(false)
+    setSubmitted(true)
+    setTimeout(() => setSubmitted(false), 5000)
   }
 
-  const inputSx = {
-    '& .MuiOutlinedInput-root': {
-      fontFamily: '"Inter", sans-serif',
-      fontSize: '14px',
-      borderRadius: '10px',
-      backgroundColor: '#fafaf8',
-      '& fieldset': { borderColor: '#e5e2dd', borderWidth: '1px' },
-      '&:hover fieldset': { borderColor: '#c8956c55' },
-      '&.Mui-focused fieldset': { borderColor: '#0a0f1c', borderWidth: '1.5px' },
-    },
-    '& .MuiInputLabel-root': {
-      fontFamily: '"Inter", sans-serif',
-      fontSize: '14px',
-      color: '#9ca3af',
-      '&.Mui-focused': { color: '#0a0f1c' },
-    },
-    '& .MuiFormHelperText-root': {
-      fontFamily: '"Inter", sans-serif',
-      fontSize: '12px',
-    },
-  }
-
-  // Success state
-  if (submitSuccess) {
+  if (submitted) {
     return (
-      <section id="call-basis-form" className="section-py" style={{ background: '#fafaf8' }}>
-        <div className="container-wide max-w-lg mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease }}
-            className="bg-white rounded-2xl p-12 border border-black/[0.04]"
-            style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.06)' }}
+      <section id="call-basis-form" style={{ background: '#fafaf8', padding: 'clamp(72px, 8vw, 120px) 0' }}>
+        <div className="container-wide" style={{ maxWidth: '520px' }}>
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: '18px',
+              padding: '56px 40px',
+              textAlign: 'center',
+              border: '1px solid rgba(0,0,0,0.04)',
+              boxShadow: '0 24px 60px -20px rgba(10,15,28,0.08)',
+            }}
           >
             <div
-              className="w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-6"
-              style={{ backgroundColor: '#f0fdf4' }}
+              style={{
+                width: '64px',
+                height: '64px',
+                borderRadius: '16px',
+                background: '#f0fdf4',
+                display: 'grid',
+                placeItems: 'center',
+                margin: '0 auto 24px',
+                color: '#1a7a42',
+              }}
             >
-              <CheckCircle size={28} style={{ color: '#1a7a42' }} strokeWidth={1.5} />
+              <CheckCircle size={28} />
             </div>
-            <h2 className="font-heading font-bold text-2xl mb-3" style={{ color: '#0a0f1c' }}>
-              Booking Received
-            </h2>
-            <p className="font-body text-sm mb-8 leading-relaxed" style={{ color: '#6b7280' }}>
-              {submitSuccess}
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: 700, marginBottom: '12px', color: '#0a0f1c' }}>
+              Booking received
+            </h3>
+            <p style={{ color: '#6b7280', fontSize: '15px', lineHeight: 1.6, margin: 0 }}>
+              Our fleet specialists will call you back within 2 hours with a tailored quote.
             </p>
-            <button
-              onClick={() => setSubmitSuccess(null)}
-              className="font-heading font-semibold text-sm text-white bg-[#0a0f1c] px-7 py-3 rounded-lg hover:bg-[#1a2332] transition-colors"
-            >
-              Submit Another Request
-            </button>
-          </motion.div>
+          </div>
         </div>
       </section>
     )
   }
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    fontFamily: 'var(--font-body)',
+    fontSize: '14px',
+    padding: '12px 14px',
+    border: '1px solid #e5e2dd',
+    borderRadius: '10px',
+    background: '#fafaf8',
+    color: '#0a0f1c',
+    outline: 'none',
+    transition: 'all 0.2s',
+  }
+
   return (
     <section
       id="call-basis-form"
-      ref={ref as React.RefObject<HTMLElement>}
-      className="section-py"
-      aria-label="Book a vehicle"
-      style={{ background: '#fafaf8' }}
+      style={{ background: '#fafaf8', padding: 'clamp(72px, 8vw, 120px) 0' }}
     >
       <div className="container-wide">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-
-          {/* Left — Info side */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, ease }}
-            className="lg:sticky lg:top-32"
-          >
-            <span className="section-label mb-6 inline-flex" style={{ color: '#c8956c' }}>
-              BOOK NOW
-            </span>
-
-            <h2
-              className="font-heading font-extrabold mb-5"
+        <div className="booking-grid-layout">
+          {/* Left info */}
+          <div>
+            <span
               style={{
-                color: '#0a0f1c',
-                fontSize: 'clamp(28px, 3vw, 42px)',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 600,
+                fontSize: '11px',
+                letterSpacing: '0.16em',
+                textTransform: 'uppercase',
+                color: '#c8956c',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '24px',
+              }}
+            >
+              Book Now
+              <span style={{ display: 'block', width: '28px', height: '1.5px', background: 'currentColor', opacity: 0.5, borderRadius: '1px' }} />
+            </span>
+            <h2
+              style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: 'clamp(30px, 3.4vw, 46px)',
                 letterSpacing: '-0.03em',
-                lineHeight: 1.1,
+                lineHeight: 1.08,
+                color: '#0a0f1c',
+                marginBottom: '20px',
               }}
             >
               Request a vehicle
               <br />
               <span style={{ color: '#c8956c' }}>on call basis.</span>
             </h2>
-
-            <p className="font-body text-base leading-relaxed mb-10" style={{ color: '#6b7280' }}>
-              Fill in your trip details and our fleet specialists will call you back within 2 hours with a tailored quote.
+            <p
+              style={{
+                fontSize: '15.5px',
+                color: '#6b7280',
+                lineHeight: 1.65,
+                marginBottom: '36px',
+                maxWidth: '460px',
+              }}
+            >
+              Fill in your trip details and our fleet specialists will call you back within 2 hours
+              with a tailored quote.
             </p>
 
-            {/* Features — clean list */}
-            <div className="space-y-5">
-              {[
-                { icon: Car, title: 'All vehicle categories', sub: 'Sedan, SUV, Minibus, Bus & more' },
-                { icon: Calendar, title: 'Flexible contracts', sub: 'Daily, weekly, monthly terms' },
-                { icon: MapPin, title: 'Pan-India coverage', sub: 'All major cities and highways' },
-                { icon: Clock, title: '2-hour response time', sub: 'Our team calls you back fast' },
-              ].map((item) => {
-                const Icon = item.icon
-                return (
-                  <div key={item.title} className="flex items-center gap-4">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#f5f3f0]">
-                      <Icon size={16} style={{ color: '#6b7280' }} strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <p className="font-body font-medium text-sm text-[#0a0f1c]">{item.title}</p>
-                      <p className="font-body text-xs text-[#9ca3af] mt-0.5">{item.sub}</p>
-                    </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+              {FEATURES.map(({ icon: Icon, title, sub }) => (
+                <div key={title} style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
+                  <div
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '10px',
+                      background: '#f5f3f0',
+                      display: 'grid',
+                      placeItems: 'center',
+                      color: '#c8956c',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={16} />
                   </div>
-                )
-              })}
+                  <div>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#0a0f1c', marginBottom: '2px' }}>{title}</div>
+                    <div style={{ fontSize: '12.5px', color: '#9ca3af' }}>{sub}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right — Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1, ease }}
+          {/* Right form */}
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: '18px',
+              padding: 'clamp(24px, 4vw, 32px)',
+              border: '1px solid rgba(0,0,0,0.04)',
+              boxShadow: '0 24px 60px -20px rgba(10,15,28,0.08)',
+            }}
           >
-            <div
-              className="bg-white rounded-2xl p-7 md:p-9 border border-black/[0.04]"
-              style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.05)' }}
-            >
-              <h3 className="font-heading font-bold text-lg mb-1" style={{ color: '#0a0f1c' }}>
-                Trip Details
-              </h3>
-              <p className="font-body text-xs text-[#9ca3af] mb-6">All fields marked * are required</p>
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: 700, color: '#0a0f1c', marginBottom: '4px' }}>
+              Trip Details
+            </h3>
+            <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '24px' }}>All fields marked * are required</p>
 
-              <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                  {/* Customer Name */}
-                  <Controller
-                    name="customerName"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Your Name *"
-                        fullWidth
-                        error={!!errors.customerName}
-                        helperText={errors.customerName?.message}
-                        autoComplete="name"
-                        sx={inputSx}
-                      />
-                    )}
+            <form onSubmit={submit}>
+              <div className="field-grid-2">
+                {/* Name */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Your Name *</label>
+                  <input type="text" required value={form.name} onChange={handle('name')} placeholder="Full name" style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(10,15,28,0.06)' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8'; e.target.style.boxShadow = 'none' }}
                   />
+                </div>
 
-                  {/* Vehicle Type */}
-                  <Controller
-                    name="vehicleType"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        value={field.value ?? ''}
-                        select
-                        label="Vehicle Type *"
-                        fullWidth
-                        error={!!errors.vehicleType}
-                        helperText={errors.vehicleType?.message}
-                        sx={inputSx}
-                      >
-                        {VEHICLE_OPTIONS.map((v) => (
-                          <MenuItem key={v} value={v} sx={{ fontFamily: '"Inter", sans-serif', fontSize: '14px' }}>
-                            {v}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
+                {/* Vehicle Type */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Vehicle Type *</label>
+                  <select required value={form.vehicleType} onChange={handle('vehicleType')} style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8' }}
+                  >
+                    <option value="">Select vehicle</option>
+                    {VEHICLE_CATEGORIES.filter(c => c !== 'All').map(c => (
+                      <option key={c} value={c}>{c}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Pickup */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Pickup Location *</label>
+                  <input type="text" required value={form.pickup} onChange={handle('pickup')} placeholder="City, landmark…" style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(10,15,28,0.06)' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8'; e.target.style.boxShadow = 'none' }}
                   />
+                </div>
 
-                  {/* Pickup */}
-                  <Controller
-                    name="pickupLocation"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Pickup Location *"
-                        fullWidth
-                        placeholder="City, landmark, or address"
-                        error={!!errors.pickupLocation}
-                        helperText={errors.pickupLocation?.message}
-                        sx={inputSx}
-                      />
-                    )}
+                {/* Drop */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Drop Location *</label>
+                  <input type="text" required value={form.drop} onChange={handle('drop')} placeholder="City, landmark…" style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(10,15,28,0.06)' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8'; e.target.style.boxShadow = 'none' }}
                   />
+                </div>
 
-                  {/* Drop */}
-                  <Controller
-                    name="dropLocation"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Drop Location *"
-                        fullWidth
-                        placeholder="City, landmark, or address"
-                        error={!!errors.dropLocation}
-                        helperText={errors.dropLocation?.message}
-                        sx={inputSx}
-                      />
-                    )}
+                {/* Start Date */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Start Date *</label>
+                  <input type="date" required value={form.startDate} onChange={handle('startDate')} style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8' }}
                   />
+                </div>
 
-                  {/* Start Date */}
-                  <Controller
-                    name="tripStartDate"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Start Date *"
-                        type="date"
-                        fullWidth
-                        inputProps={{ min: today }}
-                        error={!!errors.tripStartDate}
-                        helperText={errors.tripStartDate?.message}
-                        InputLabelProps={{ shrink: true }}
-                        sx={inputSx}
-                      />
-                    )}
+                {/* End Date */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>End Date *</label>
+                  <input type="date" required value={form.endDate} onChange={handle('endDate')} style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8' }}
                   />
+                </div>
 
-                  {/* End Date */}
-                  <Controller
-                    name="tripEndDate"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="End Date *"
-                        type="date"
-                        fullWidth
-                        inputProps={{ min: today }}
-                        error={!!errors.tripEndDate}
-                        helperText={errors.tripEndDate?.message}
-                        InputLabelProps={{ shrink: true }}
-                        sx={inputSx}
-                      />
-                    )}
+                {/* Start Time */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Pickup Time *</label>
+                  <input type="time" required value={form.startTime} onChange={handle('startTime')} style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8' }}
                   />
+                </div>
 
-                  {/* Start Time */}
-                  <Controller
-                    name="tripStartTime"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Pickup Time *"
-                        type="time"
-                        fullWidth
-                        error={!!errors.tripStartTime}
-                        helperText={errors.tripStartTime?.message || 'Trip start time'}
-                        InputLabelProps={{ shrink: true }}
-                        inputProps={{ step: 300 }}
-                        sx={inputSx}
-                      />
-                    )}
+                {/* End Time */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Drop-off Time *</label>
+                  <input type="time" required value={form.endTime} onChange={handle('endTime')} style={inputStyle}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8' }}
                   />
+                </div>
 
-                  {/* End Time */}
-                  <Controller
-                    name="tripEndTime"
-                    control={control}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        label="Drop-off Time *"
-                        type="time"
-                        fullWidth
-                        error={!!errors.tripEndTime}
-                        helperText={errors.tripEndTime?.message || 'Trip end time'}
-                        InputLabelProps={{ shrink: true }}
-                        inputProps={{ step: 300 }}
-                        sx={inputSx}
-                      />
-                    )}
-                  />
-
-                  {/* Contact Number */}
-                  <div className="sm:col-span-2">
-                    <Controller
-                      name="contactNumber"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Contact Number *"
-                          fullWidth
-                          placeholder="10-digit mobile number"
-                          inputProps={{ maxLength: 10 }}
-                          error={!!errors.contactNumber}
-                          helperText={errors.contactNumber?.message}
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <Phone size={14} style={{ color: '#9ca3af' }} strokeWidth={1.5} />
-                                <span className="font-body text-sm ml-1.5" style={{ color: '#9ca3af' }}>+91</span>
-                              </InputAdornment>
-                            ),
-                          }}
-                          sx={inputSx}
-                        />
-                      )}
-                    />
-                  </div>
-
-                  {/* Notes */}
-                  <div className="sm:col-span-2">
-                    <Controller
-                      name="additionalNotes"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Additional Notes"
-                          multiline
-                          rows={3}
-                          fullWidth
-                          placeholder="Passenger count, luggage, special requirements..."
-                          error={!!errors.additionalNotes}
-                          helperText={errors.additionalNotes?.message}
-                          sx={inputSx}
-                        />
-                      )}
+                {/* Phone — full width */}
+                <div style={{ gridColumn: '1/-1', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Contact Number *</label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'stretch',
+                      border: '1px solid #e5e2dd',
+                      borderRadius: '10px',
+                      background: '#fafaf8',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <span
+                      style={{
+                        display: 'grid',
+                        placeItems: 'center',
+                        padding: '0 14px',
+                        background: '#f5f3f0',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        color: '#2d3036',
+                        borderRight: '1px solid #e5e2dd',
+                        flexShrink: 0,
+                      }}
+                    >
+                      +91
+                    </span>
+                    <input
+                      type="tel"
+                      required
+                      maxLength={10}
+                      value={form.phone}
+                      onChange={handle('phone')}
+                      placeholder="10-digit mobile number"
+                      style={{ ...inputStyle, border: 'none', borderRadius: 0, background: 'transparent', flex: 1 }}
                     />
                   </div>
                 </div>
 
-                {/* Error */}
-                {submitError && (
-                  <div
-                    className="mt-4 flex items-start gap-3 p-4 rounded-xl"
-                    style={{ backgroundColor: '#fef2f2', border: '1px solid #fecaca' }}
-                  >
-                    <span className="font-body text-sm" style={{ color: '#c23a22' }}>{submitError}</span>
-                  </div>
-                )}
+                {/* Notes — full width */}
+                <div style={{ gridColumn: '1/-1', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#6b7280' }}>Additional Notes</label>
+                  <textarea
+                    rows={3}
+                    value={form.notes}
+                    onChange={handle('notes')}
+                    placeholder="Passenger count, luggage, special requirements…"
+                    style={{ ...inputStyle, resize: 'vertical', minHeight: '84px' }}
+                    onFocus={e => { e.target.style.borderColor = '#0a0f1c'; e.target.style.background = '#fff'; e.target.style.boxShadow = '0 0 0 3px rgba(10,15,28,0.06)' }}
+                    onBlur={e => { e.target.style.borderColor = '#e5e2dd'; e.target.style.background = '#fafaf8'; e.target.style.boxShadow = 'none' }}
+                  />
+                </div>
+              </div>
 
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={!isValid || isSubmitting || submitMutation.isPending}
-                  className="w-full mt-6 flex items-center justify-center gap-2.5 font-heading font-semibold text-[14px] text-white py-4 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{
-                    background: isValid ? '#0a0f1c' : '#9ca3af',
-                    minHeight: '52px',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (isValid) e.currentTarget.style.background = '#1a2332'
-                  }}
-                  onMouseLeave={(e) => {
-                    if (isValid) e.currentTarget.style.background = '#0a0f1c'
-                  }}
-                >
-                  {isSubmitting || submitMutation.isPending ? (
-                    <>
-                      <CircularProgress size={16} sx={{ color: '#ffffff' }} />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit Booking Request
-                      <ArrowRight size={15} strokeWidth={2} />
-                    </>
-                  )}
-                </button>
-              </form>
-            </div>
-          </motion.div>
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: '100%',
+                  marginTop: '24px',
+                  background: loading ? '#6b7280' : '#0a0f1c',
+                  color: '#fff',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  border: 'none',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s',
+                }}
+                onMouseEnter={e => { if (!loading) e.currentTarget.style.background = '#1a2332' }}
+                onMouseLeave={e => { if (!loading) e.currentTarget.style.background = '#0a0f1c' }}
+              >
+                {loading ? 'Submitting…' : 'Submit Booking Request'}
+                {!loading && <ArrowRight size={15} />}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
+
+      <style>{`
+        .booking-grid-layout {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 56px;
+          align-items: start;
+        }
+        .field-grid-2 {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        @media (min-width: 640px) {
+          .field-grid-2 { grid-template-columns: 1fr 1fr; }
+        }
+        @media (min-width: 1024px) {
+          .booking-grid-layout { grid-template-columns: 1fr 1.1fr; gap: 80px; }
+        }
+      `}</style>
     </section>
   )
 }

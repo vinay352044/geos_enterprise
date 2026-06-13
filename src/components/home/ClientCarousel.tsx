@@ -1,217 +1,323 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { useInView } from '@/hooks/useInView'
-import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards'
 
-type Client = {
-  id: string
-  tag: string
-  name: string
-  description: string
-  logo: string
-}
-
-const allClients: Client[] = [
+const CLIENTS = [
   {
-    id: 'ongc',
-    tag: 'Oil & Gas',
     name: 'ONGC',
-    description:
-      "India's largest state-owned oil & gas explorer — fleet partner since inception.",
     logo: '/images/clients/ongc.jpg',
+    tag: 'PSU',
+    tagline: 'Oil & Natural Gas',
+    scope: 'Crew & field-site transport across Gujarat exploration assets, including offshore support rotations.',
+    since: 2002,
+    fleet: '60+ vehicles',
   },
   {
-    id: 'vedanta',
-    tag: 'Resources',
-    name: 'Vedanta',
-    description:
-      'Diversified natural resources conglomerate — powering operations across India.',
-    logo: '/images/clients/vedanta.jpg',
-  },
-  {
-    id: 'bpcl',
-    tag: 'Petroleum',
     name: 'BPCL',
-    description:
-      'Fortune Global 500 oil major — trusted fleet logistics across refineries.',
     logo: '/images/clients/bpcl.jpg',
+    tag: 'PSU',
+    tagline: 'Bharat Petroleum',
+    scope: 'Executive movement, depot operations and refinery staff transport across Gujarat distribution network.',
+    since: 2008,
+    fleet: '35+ vehicles',
   },
   {
-    id: 'gvk',
-    tag: 'Healthcare',
-    name: 'GVK EMRI',
-    description:
-      "Operating India's 108 ambulance service — where every minute counts.",
-    logo: '/images/clients/gvk-emri.jpg',
-  },
-  {
-    id: 'adani',
-    tag: 'Infrastructure',
-    name: 'Adani Group',
-    description:
-      'Ports, energy, logistics & infrastructure leader — scaling with our fleet.',
-    logo: '/images/clients/adani.jpg',
-  },
-  {
-    id: 'nhsrcl',
-    tag: 'Railways',
     name: 'NHSRCL',
-    description:
-      "National High Speed Rail Corporation — building India's bullet train corridor.",
     logo: '/images/clients/nhsrcl.jpg',
+    tag: 'PSU',
+    tagline: 'High Speed Rail Corp.',
+    scope: 'Project-site mobility on the Mumbai–Ahmedabad MAHSR corridor for engineers & senior officials.',
+    since: 2019,
+    fleet: '25+ vehicles',
   },
   {
-    id: 'iffco',
-    tag: 'Agriculture',
     name: 'IFFCO',
-    description:
-      "World's largest fertilizer cooperative — fleet services across India.",
     logo: '/images/clients/iffco.jpg',
+    tag: 'PSU',
+    tagline: 'Fertiliser Co-operative',
+    scope: 'Plant operations & staff transport for the Kalol manufacturing unit, shift and executive movement.',
+    since: 2005,
+    fleet: '30+ vehicles',
   },
   {
-    id: 'eil',
-    tag: 'Engineering',
+    name: 'Adani Group',
+    logo: '/images/clients/adani.jpg',
+    tag: 'Private',
+    tagline: 'Infrastructure & Energy',
+    scope: 'Port logistics, project-site transport and executive fleet at Mundra SEZ and regional HQ.',
+    since: 2012,
+    fleet: '45+ vehicles',
+  },
+  {
+    name: 'Vedanta',
+    logo: '/images/clients/vedanta.jpg',
+    tag: 'Private',
+    tagline: 'Natural Resources',
+    scope: 'Mining operations crew transport and management movement for Gujarat and Rajasthan sites.',
+    since: 2014,
+    fleet: '20+ vehicles',
+  },
+  {
+    name: 'GVK EMRI',
+    logo: '/images/clients/gvk-emri.jpg',
+    tag: 'Govt',
+    tagline: 'Emergency 112 Services',
+    scope: 'Emergency response support fleet running 24×7 across Gujarat for the national 112 helpline.',
+    since: 2010,
+    fleet: '50+ vehicles',
+  },
+  {
     name: 'EIL',
-    description:
-      "Engineers India Limited — engineering consultancy for India's energy sector.",
     logo: '/images/clients/eil.jpg',
-  },
-  {
-    id: 'gvk112',
-    tag: 'Emergency',
-    name: 'GVK 112',
-    description: "Jan Rakshak — India's unified emergency response service.",
-    logo: '/images/clients/call-112.jpg',
-  },
-  {
-    id: 'nclt',
-    tag: 'Judiciary',
-    name: 'NCLT',
-    description:
-      "National Company Law Tribunal — serving India's corporate legal framework.",
-    logo: '/images/clients/nclt.jpg',
+    tag: 'PSU',
+    tagline: 'Engineers India Ltd.',
+    scope: 'Engineering site-visit & survey mobility for project consultancy assignments across Western India.',
+    since: 2011,
+    fleet: '15+ vehicles',
   },
 ]
 
-const ease = [0.25, 1, 0.5, 1] as const
+const TAG_COLOR: Record<string, { color: string; bg: string }> = {
+  PSU: { color: '#1a7a42', bg: 'rgba(26,122,66,0.1)' },
+  Govt: { color: '#c23a22', bg: 'rgba(194,58,34,0.08)' },
+  Private: { color: '#a87650', bg: 'rgba(200,149,108,0.15)' },
+}
 
-/** Client card — elevated logo tile + bigger breathing room. */
-function ClientCard({ client }: { client: Client }) {
+function TrustChip({ c }: { c: typeof CLIENTS[0] }) {
+  const tc = TAG_COLOR[c.tag] || TAG_COLOR.PSU
   return (
-    <div className="group bg-white rounded-2xl p-7 flex flex-col w-[320px] md:w-[380px] min-h-[240px] border border-black/[0.05] transition-all duration-400 hover:border-black/[0.12] hover:shadow-[0_12px_48px_rgba(0,0,0,0.08)] hover:-translate-y-1">
-      {/* Top: tag + logo */}
-      <div className="flex items-start justify-between mb-6">
-        <span
-          className="font-body font-semibold text-[11px] tracking-[0.08em] uppercase px-3 py-1.5 rounded-md"
-          style={{ backgroundColor: '#f5f3f0', color: '#6b7280' }}
+    <div
+      className="trust-chip-card"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: '380px',
+        padding: '28px 28px 24px',
+        background: '#fff',
+        border: '1px solid #e5e2dd',
+        borderRadius: '20px',
+        flexShrink: 0,
+        gap: '16px',
+      }}
+    >
+      {/* Head: logo + identity */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        {/* Logo tile */}
+        <div
+          style={{
+            width: '64px',
+            height: '64px',
+            flexShrink: 0,
+            borderRadius: '14px',
+            overflow: 'hidden',
+            background: '#f5f3f0',
+            border: '1px solid #e5e2dd',
+            position: 'relative',
+          }}
         >
-          {client.tag}
-        </span>
-        {client.logo && (
+          <Image
+            src={c.logo}
+            alt={c.name}
+            fill
+            sizes="64px"
+            style={{ objectFit: 'contain', padding: '8px' }}
+          />
+        </div>
+
+        {/* Name + tag + tagline */}
+        <div style={{ flex: 1, minWidth: 0 }}>
           <div
-            className="relative w-20 h-14 rounded-lg overflow-hidden shrink-0 bg-white"
             style={{
-              border: '1px solid rgba(0,0,0,0.06)',
-              boxShadow:
-                '0 2px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8)',
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 800,
+              fontSize: '19px',
+              color: '#0a0f1c',
+              letterSpacing: '-0.02em',
+              lineHeight: 1.15,
+              marginBottom: '6px',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
             }}
           >
-            <Image
-              src={client.logo}
-              alt={client.name}
-              fill
-              className="object-contain p-1.5"
-              sizes="80px"
-            />
+            {c.name}
           </div>
-        )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+            <span
+              style={{
+                fontSize: '9.5px',
+                fontWeight: 700,
+                letterSpacing: '0.09em',
+                textTransform: 'uppercase',
+                padding: '3px 8px',
+                borderRadius: '5px',
+                color: tc.color,
+                background: tc.bg,
+                flexShrink: 0,
+              }}
+            >
+              {c.tag}
+            </span>
+            <span
+              style={{
+                fontSize: '12.5px',
+                color: '#6b7280',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              {c.tagline}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Name */}
-      <h3
-        className="font-heading font-bold text-xl mb-2 leading-tight"
-        style={{ color: '#0a0f1c' }}
-      >
-        {client.name}
-      </h3>
-
-      {/* Description */}
+      {/* Scope description */}
       <p
-        className="font-body text-sm leading-relaxed mt-auto"
-        style={{ color: '#9ca3af' }}
+        style={{
+          fontSize: '13.5px',
+          color: '#4b5563',
+          lineHeight: 1.65,
+          margin: 0,
+          flex: 1,
+        }}
       >
-        {client.description}
+        {c.scope}
       </p>
+
+      {/* Footer meta */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          paddingTop: '16px',
+          borderTop: '1px dashed #e5e2dd',
+          fontSize: '12.5px',
+          color: '#9ca3af',
+        }}
+      >
+        <span>
+          Partner since{' '}
+          <strong style={{ color: '#0a0f1c', fontWeight: 700 }}>{c.since}</strong>
+        </span>
+        <span
+          style={{
+            width: '3px',
+            height: '3px',
+            borderRadius: '50%',
+            background: '#c8956c',
+            flexShrink: 0,
+          }}
+        />
+        <span>
+          <strong style={{ color: '#0a0f1c', fontWeight: 700 }}>{c.fleet}</strong>{' '}
+          deployed
+        </span>
+      </div>
     </div>
   )
 }
 
 export function ClientCarousel() {
-  const { ref, inView } = useInView(0.1)
-
-  // Split into two rows for a layered, opposing-direction effect.
-  const firstHalf = allClients.slice(0, 5)
-  const secondHalf = allClients.slice(5)
+  const loop = [...CLIENTS, ...CLIENTS]
 
   return (
-    <section
-      ref={ref as React.RefObject<HTMLElement>}
-      aria-label="Our clients"
-      className="section-py bg-[#fafaf8]"
-    >
+    <section style={{ background: '#fafaf8', padding: 'clamp(72px, 8vw, 120px) 0' }}>
       <div className="container-wide">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease }}
-          className="max-w-2xl mb-12"
-        >
-          <span className="section-label mb-5 inline-flex" style={{ color: '#c8956c' }}>OUR CLIENTS</span>
+        <div style={{ maxWidth: '760px', marginBottom: '48px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 600,
+              fontSize: '11px',
+              letterSpacing: '0.16em',
+              textTransform: 'uppercase',
+              color: '#c8956c',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              marginBottom: '18px',
+            }}
+          >
+            Certifications &amp; Tie-ups
+            <span style={{ display: 'block', width: '28px', height: '1.5px', background: 'currentColor', opacity: 0.5, borderRadius: '1px' }} />
+          </span>
           <h2
-            className="font-heading font-extrabold mb-4"
-            style={{ color: '#0a0f1c' }}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontWeight: 800,
+              fontSize: 'clamp(30px, 3.2vw, 46px)',
+              letterSpacing: '-0.03em',
+              lineHeight: 1.08,
+              color: '#0a0f1c',
+              marginBottom: '14px',
+            }}
           >
-            Trusted by India&apos;s
-            <br />
-            biggest names.
+            Trusted by India&apos;s largest{' '}
+            <span style={{ color: '#c8956c' }}>PSUs &amp; Government bodies.</span>
           </h2>
-          <p
-            className="font-body text-base"
-            style={{ color: '#6b7280', lineHeight: 1.7 }}
-          >
-            From state-owned oil giants to private conglomerates building
-            tomorrow&apos;s India — our fleet has served the organisations that
-            move the nation forward.
+          <p style={{ color: '#6b7280', fontSize: '15px', lineHeight: 1.7, margin: 0, maxWidth: '620px' }}>
+            From state-owned oil giants to private conglomerates — every contract backed by
+            audit-ready documentation and 35+ years of relationship-driven service.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Infinite scrolling rows */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.15, ease }}
-          className="space-y-6"
+        {/* Marquee — contained within container, overflow hidden */}
+        <div
+          style={{
+            overflow: 'hidden',
+            borderRadius: '16px',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%)',
+            maskImage: 'linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%)',
+          }}
+          onMouseEnter={e => {
+            const t = e.currentTarget.querySelector('.marquee-track') as HTMLElement
+            if (t) t.style.animationPlayState = 'paused'
+          }}
+          onMouseLeave={e => {
+            const t = e.currentTarget.querySelector('.marquee-track') as HTMLElement
+            if (t) t.style.animationPlayState = 'running'
+          }}
         >
-          <InfiniteMovingCards
-            items={firstHalf}
-            getKey={(client) => client.id}
-            renderItem={(client) => <ClientCard client={client} />}
-            direction="left"
-            speed="slow"
-          />
-
-          <InfiniteMovingCards
-            items={secondHalf}
-            getKey={(client) => client.id}
-            renderItem={(client) => <ClientCard client={client} />}
-            direction="right"
-            speed="slow"
-          />
-        </motion.div>
+          <div
+            className="marquee-track"
+            style={{
+              display: 'flex',
+              gap: '20px',
+              width: 'max-content',
+              animation: 'marquee-scroll 80s linear infinite',
+              willChange: 'transform',
+              padding: '12px 0',
+            }}
+          >
+            {loop.map((c, i) => (
+              <TrustChip key={i} c={c} />
+            ))}
+          </div>
+        </div>
       </div>
+
+      <style>{`
+        .trust-chip-card {
+          transition: border-color 0.3s, transform 0.3s cubic-bezier(0.23,1,0.32,1), box-shadow 0.3s;
+          cursor: default;
+        }
+        .trust-chip-card:hover {
+          border-color: #c8956c !important;
+          transform: translateY(-4px);
+          box-shadow: 0 16px 40px -14px rgba(200,149,108,0.35);
+        }
+        @keyframes marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track { animation: none !important; }
+        }
+      `}</style>
     </section>
   )
 }
